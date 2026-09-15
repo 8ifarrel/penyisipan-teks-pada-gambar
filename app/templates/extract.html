@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon_upload, icon_key %}
+{% block title %}Ekstraksi Teks{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <h1>Ekstraksi Teks</h1>
+    <p>Ambil kembali teks yang telah disisipkan pada citra stego.</p>
+  </div>
+
+  <form class="card" method="post" enctype="multipart/form-data">
+    <div class="form-field">
+      <label for="stego_image">Unggah Foto</label>
+      <p class="form-field__hint">Foto harus berformat PNG dan bermodel warna RGB 24-bit</p>
+
+      <div class="dropzone">
+        <input type="file" id="stego_image" name="stego_image" accept="image/png"
+           class="dropzone__input" required>
+        <div class="dropzone__content">
+          <span class="dropzone__icon">{{ icon_upload() }}</span>
+          <p class="dropzone__title">Klik atau seret foto ke sini</p>
+          <p class="dropzone__filename" data-dropzone-filename hidden></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="key">Kunci AES</label>
+      <p class="form-field__hint">Format heksadesimal, 32 karakter (128-bit), sesuai yang diberikan saat penyisipan</p>
+      <div class="input-with-icon">
+        <span class="input-with-icon__icon">{{ icon_key() }}</span>
+        <input type="text" id="key" name="key" class="key-display" required
+           pattern="[0-9a-fA-F]{32}" maxlength="32"
+           placeholder="mis. 27a9711094187ca9a317a094dab7af9e">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-block">Ekstraksi Teks</button>
+  </form>
+{% endblock %}

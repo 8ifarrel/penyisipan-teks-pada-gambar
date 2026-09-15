@@ -1,0 +1,88 @@
+{# Kumpulan ikon SVG inline sederhana (garis/stroke, 24x24), dipakai lewat
+ {% from "_icons.html" import icon_... %} di template lain. Inline SVG
+ dipilih alih-alih icon font/library eksternal agar tetap ringan dan
+ berfungsi offline. #}
+
+{% macro icon_upload() %}
+<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M12 16V4" />
+  <path d="M7 9l5-5 5 5" />
+  <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
+</svg>
+{% endmacro %}
+
+{% macro icon_copy() %}
+<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect x="9" y="9" width="11" height="11" rx="2" />
+  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+</svg>
+{% endmacro %}
+
+{% macro icon_download() %}
+<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M12 4v12" />
+  <path d="M7 11l5 5 5-5" />
+  <path d="M4 20h16" />
+</svg>
+{% endmacro %}
+
+{% macro icon_image() %}
+<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect x="3" y="3" width="18" height="18" rx="2" />
+  <circle cx="8.5" cy="8.5" r="1.5" />
+  <path d="M21 15l-5-5L5 21" />
+</svg>
+{% endmacro %}
+
+{% macro icon_key() %}
+<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="8" cy="15" r="4" />
+  <path d="M10.8 12.2L19 4" />
+  <path d="M15 6l2.5 2.5" />
+  <path d="M18 3l3 3" />
+</svg>
+{% endmacro %}
+
+{% macro icon_lock() %}
+<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect x="4" y="10" width="16" height="11" rx="2" />
+  <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+</svg>
+{% endmacro %}
+
+{% macro icon_menu() %}
+<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M4 7h16" />
+  <path d="M4 12h16" />
+  <path d="M4 17h16" />
+</svg>
+{% endmacro %}
+
+{% macro icon_close() %}
+<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M6 6l12 12" />
+  <path d="M18 6L6 18" />
+</svg>
+{% endmacro %}
+
+{% macro icon_check() %}
+<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M5 12.5l4.5 4.5L19 7" />
+</svg>
+{% endmacro %}
+
+{# Ilustrasi garis abstrak untuk hero beranda: bingkai foto dengan lencana
+ amplop kecil di sudut, merepresentasikan "teks pesan tersembunyi di
+ dalam citra" tanpa perlu aset gambar eksternal. Warna mengikuti
+ currentColor (aksen), latar lencana memakai var(--color-bg) agar
+ menimpa garis bingkai di baliknya. #}
+{% macro illustration_hero() %}
+<svg class="hero-illustration" viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect x="8" y="8" width="64" height="64" rx="12" />
+  <circle cx="27" cy="28" r="6" />
+  <path d="M8 58l18-16 14 12 12-10 20 18" />
+  <circle cx="70" cy="70" r="19" fill="var(--color-bg)" />
+  <rect x="61" y="63" width="18" height="14" rx="2.5" />
+  <path d="M61 64.5l9 7.5 9-7.5" />
+</svg>
+{% endmacro %}

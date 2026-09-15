@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Beranda{% endblock %} - Samarupa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  {% from "_icons.html" import icon_menu, icon_close %}
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="{{ url_for('main.index') }}">Samarupa</a>
+
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle__icon nav-toggle__icon--open">{{ icon_menu() }}</span>
+        <span class="nav-toggle__icon nav-toggle__icon--close">{{ icon_close() }}</span>
+        <span class="visually-hidden">Buka menu navigasi</span>
+      </button>
+
+      <nav class="nav" id="site-nav">
+        <a href="{{ url_for('main.index') }}"
+         class="nav__link{% if request.endpoint == 'main.index' %} nav__link--active{% endif %}">Beranda</a>
+        <a href="{{ url_for('main.sisipkan') }}"
+         class="nav__link{% if request.endpoint == 'main.sisipkan' %} nav__link--active{% endif %}">Sisipkan Teks</a>
+        <a href="{{ url_for('main.ekstraksi') }}"
+         class="nav__link{% if request.endpoint == 'main.ekstraksi' %} nav__link--active{% endif %}">Ekstraksi Teks</a>
+        <a href="{{ url_for('main.tentang') }}"
+         class="nav__link{% if request.endpoint == 'main.tentang' %} nav__link--active{% endif %}">Tentang</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page {% block main_class %}{% endblock %}">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for category, message in messages %}
+            <li class="flash flash-{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Model Advanced Encryption Standard dan Least Significant Bit untuk Menerapkan Penyisipan Teks pada Gambar.</p>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

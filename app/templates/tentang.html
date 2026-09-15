@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon_lock, icon_image, icon_key %}
+{% block title %}Tentang{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <h1>Tentang Samarupa</h1>
+    <p>Menyembunyikan teks di dalam citra, secara aman.</p>
+  </div>
+
+  <div class="card">
+    <h2>Apa itu Samarupa?</h2>
+    <p>
+      Samarupa adalah aplikasi steganografi yang menyisipkan teks rahasia
+      ke dalam citra digital. Nama "Samarupa" berasal dari kata "samar"
+      (tersembunyi) dan "rupa" (wujud/citra), yaitu wujud yang
+      menyamarkan pesan di dalamnya. Aplikasi ini dibangun sebagai
+      implementasi tugas akhir (skripsi) dengan judul <em>Model Advanced
+      Encryption Standard dan Least Significant Bit untuk Menerapkan
+      Penyisipan Teks pada Gambar</em>.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Cara Kerja</h2>
+    <ol class="about-steps">
+      <li>
+        <span class="about-steps__marker">01</span>
+        <div>
+          <strong>Enkripsi.</strong> Teks dienkripsi dengan AES-128-GCM
+          menggunakan kunci acak sekali pakai, menghasilkan
+          ciphertext, nonce, dan tag autentikasi.
+        </div>
+      </li>
+      <li>
+        <span class="about-steps__marker">02</span>
+        <div>
+          <strong>Pembentukan payload.</strong> Nonce, tag, dan
+          ciphertext digabung menjadi satu payload biner terstruktur,
+          lengkap dengan header penanda panjang data.
+        </div>
+      </li>
+      <li>
+        <span class="about-steps__marker">03</span>
+        <div>
+          <strong>Penyisipan LSB.</strong> Setiap bit payload
+          disisipkan ke bit paling tidak signifikan (Least
+          Significant Bit) pada tiap kanal warna (R, G, B) citra,
+          sehingga perubahan piksel nyaris tidak kasatmata.
+        </div>
+      </li>
+      <li>
+        <span class="about-steps__marker">04</span>
+        <div>
+          <strong>Ukur kualitas.</strong> Citra asli & citra hasil
+          dibandingkan lewat MSE dan PSNR untuk memastikan perubahan
+          visualnya tetap dalam batas wajar.
+        </div>
+      </li>
+      <li>
+        <span class="about-steps__marker">05</span>
+        <div>
+          <strong>Ekstraksi &amp; dekripsi.</strong> Proses sebaliknya:
+          bit LSB dibaca dari citra, payload disusun ulang, lalu
+          didekripsi kembali menjadi teks asli menggunakan kunci AES
+          yang sama.
+        </div>
+      </li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>Catatan Keamanan</h2>
+    <ul class="about-notes">
+      <li>
+        {{ icon_key() }}
+        <span>Kunci AES ditampilkan dalam format heksadesimal (32
+        karakter, 128-bit) dan <strong>tidak pernah disimpan</strong>
+        di server, hanya muncul sekali di halaman hasil, jadi
+        simpan sendiri segera setelah penyisipan.</span>
+      </li>
+      <li>
+        {{ icon_lock() }}
+        <span>Tanpa kunci yang benar, teks tidak bisa didekripsi
+        meski payload berhasil diekstraksi dari citra. AES-GCM
+        juga mendeteksi jika data telah diubah/rusak.</span>
+      </li>
+      <li>
+        {{ icon_image() }}
+        <span>Citra stego disimpan sementara di server (maks. 15
+        menit) hanya untuk keperluan pratinjau &amp; unduhan, lalu
+        dihapus otomatis.</span>
+      </li>
+    </ul>
+  </div>
+{% endblock %}

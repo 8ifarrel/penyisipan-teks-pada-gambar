@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "samuelcolvin.jinjahtml",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "cstrap.flask-snippets",
+        "formulahendry.auto-rename-tag",
+        "oderwat.indent-rainbow"
+    ]
+}

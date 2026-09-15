@@ -1,0 +1,919 @@
+/* ============================================================================
+ Stylesheet sistem.
+
+ Pendekatan desain (v3, "terminal"): identitas visual bergaya
+ command-line/keamanan yang cocok secara tematik dengan kripto & steganografi.
+ Latar hampir hitam (bukan hitam murni), dengan SATU warna aksen, yaitu
+ PUTIH, bukan hijau phosphor klise ala terminal, dipakai konsisten untuk
+ semua elemen interaktif (tombol, tautan aktif, fokus). Label, judul, dan
+ navigasi memakai font monospace (JetBrains Mono) untuk kesan "kode",
+ sedangkan paragraf panjang tetap memakai font sans (IBM Plex Sans) supaya
+ tetap nyaman dibaca. Sudut dibuat tegas/kecil (bukan membulat lega seperti
+ versi sebelumnya), kartu memakai garis tepi tipis (bukan borderless).
+ Warna hijau/kuning/merah TETAP dipertahankan sebagai warna SEMANTIK
+ (baik/cukup/buruk) pada badge kualitas PSNR, karena ini independen dari
+ warna aksen, bukan pengecualian terhadap aturan "satu aksen".
+
+ Pendekatan responsif: MOBILE-FIRST. Gaya dasar (tanpa media query) berlaku
+ untuk layar sempit (~375-480px); media query `min-width` di bawah
+ MENAMBAHKAN penyesuaian untuk tablet (>=640px) dan desktop (>=1024px).
+
+ Font: JetBrains Mono & IBM Plex Sans dimuat dari Google Fonts (lihat
+ base.html) dengan fallback ke font monospace/sans sistem.
+
+ Struktur file:
+  1. Custom properties (design tokens)
+  2. Reset & base
+  3. Utilitas kecil
+  4. Layout (container, page)
+  5. Header & navigasi (termasuk hamburger menu mobile)
+  6. Tipografi halaman (page-header, hero, ilustrasi hero)
+  7. Card / panel (garis tepi tipis)
+  8. Halaman Tentang (langkah cara kerja & catatan keamanan)
+  9. Form (field, input, textarea, dropzone unggah, input berikon)
+  10. Tombol (sudut tegas)
+  11. Hasil (preview citra, badge kualitas)
+  12. Flash messages
+  13. Footer
+  14. Breakpoint tablet (min-width: 640px)
+  15. Breakpoint desktop (min-width: 1024px)
+ ============================================================================ */
+
+/* 1. Custom properties (design tokens) -------------------------------------- */
+
+:root {
+  /* Warna: latar hampir-hitam + 1 teks putih kebiruan + 1 aksen PUTIH */
+  --color-bg: #0b0f14;
+  --color-surface: #0f1420;           /* input, dropzone, image-frame */
+  --color-surface-tint: #131a24;      /* kartu/panel */
+  --color-border: #232c38;
+  --color-border-strong: #38445a;
+  --color-text: #e7ecf2;
+  --color-text-muted: #7c8ba1;
+
+  --color-accent: #ffffff;
+  --color-accent-hover: #c6cdd6;
+  --color-accent-soft: rgba(255, 255, 255, 0.1);
+  --color-accent-contrast: #0b0f14;
+
+  --color-error-bg: rgba(239, 106, 106, 0.12);
+  --color-error-text: #ff9b9b;
+  --color-success-bg: rgba(110, 231, 176, 0.12);
+  --color-success-text: #6ee7b0;
+
+  /* Hijau/kuning/merah di sini adalah warna SEMANTIK badge kualitas PSNR
+   (baik/cukup/buruk), independen dari warna aksen di atas. */
+  --color-badge-good-bg: rgba(110, 231, 176, 0.12);
+  --color-badge-good-text: #6ee7b0;
+  --color-badge-ok-bg: rgba(240, 177, 85, 0.14);
+  --color-badge-ok-text: #f0b155;
+  --color-badge-bad-bg: rgba(239, 106, 106, 0.12);
+  --color-badge-bad-text: #ff9b9b;
+
+  /* Tipografi: mono utk judul/label/navigasi (identitas "kode"), sans utk
+   paragraf panjang supaya tetap nyaman dibaca. */
+  --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", "SF Mono",
+    Menlo, Consolas, "Liberation Mono", monospace;
+
+  --fs-sm: 0.875rem;
+  --fs-body: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-h2: 1.15rem;
+  --fs-h1: clamp(1.65rem, 1.3rem + 1.6vw, 2.25rem);
+  --fs-hero: clamp(2.4rem, 1.6rem + 4.5vw, 3.75rem);
+  --lh-body: 1.6;
+
+  /* Spacing (skala 4px) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* Radius: tegas & kecil, bukan membulat lega, untuk kesan panel CLI */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 999px;
+
+  /* Layout */
+  --container-max: 1100px;
+  --content-max: 720px; /* lebar nyaman baca untuk form & hasil */
+
+  --transition-fast: 150ms ease;
+  --touch-target: 44px; /* target sentuh minimum */
+}
+
+/* 2. Reset & base ------------------------------------------------------------ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  /* dvh memperhitungkan chrome browser mobile (address bar dsb.) yang
+   menyusutkan viewport nyata. Baris di atas (vh) adalah fallback untuk
+   browser lama yang tidak mengenali satuan ini. */
+  min-height: 100dvh;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+  font-family: var(--font-mono);
+  letter-spacing: -0.01em;
+}
+
+/* 3. Utilitas kecil ------------------------------------------------------------ */
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.icon {
+  width: 1.25em;
+  height: 1.25em;
+  flex-shrink: 0;
+}
+
+/* 4. Layout ---------------------------------------------------------------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+.page {
+  flex: 1;
+  padding-block: var(--space-6) var(--space-8);
+}
+
+/* Varian khusus beranda: manfaatkan body yang sudah flex-column penuh
+ viewport (lihat "body" di atas) supaya konten hero mengisi & di-center
+ pada SISA ruang setelah header+footer, tanpa perlu menghitung tinggi
+ header/footer secara manual (flexbox yang menghitungnya). Padding jauh
+ lebih kecil dari .page biasa karena centering-lah yang mengatur jarak,
+ bukan padding tetap, sehingga di layar pendek (laptop kecil, ponsel
+ pendek) beranda tetap muat tanpa scroll. */
+.page.page--home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: var(--space-4);
+}
+
+.page--home .hero {
+  padding-block: 0;
+}
+
+/* 5. Header & navigasi -------------------------------------------------------------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(11, 15, 20, 0.85);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.brand::before {
+  content: "#> ";
+  color: var(--color-accent);
+}
+
+/* Tombol hamburger: tampil di mobile, disembunyikan mulai breakpoint tablet */
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-tint);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.nav-toggle__icon {
+  display: flex;
+}
+
+.nav-toggle__icon--close {
+  display: none;
+}
+
+.nav-toggle.is-active .nav-toggle__icon--open {
+  display: none;
+}
+
+.nav-toggle.is-active .nav-toggle__icon--close {
+  display: flex;
+}
+
+/* Nav: tersembunyi (dropdown) secara default di mobile, dibuka lewat JS */
+.nav {
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  order: 3;
+  gap: var(--space-1);
+  padding-top: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.nav.is-open {
+  display: flex;
+}
+
+.nav__link {
+  display: flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.nav__link:hover {
+  color: var(--color-text);
+  background: var(--color-surface-tint);
+}
+
+.nav__link--active {
+  color: var(--color-accent);
+  font-weight: 600;
+  background: var(--color-accent-soft);
+}
+
+/* 6. Tipografi halaman (page-header, hero & ilustrasi) -------------------------------- */
+
+.page-header,
+.hero,
+.card {
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+.page-header {
+  margin-bottom: var(--space-5);
+}
+
+.page-header h1 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-h1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.page-header p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-lg);
+}
+
+.hero {
+  text-align: center;
+  padding-block: var(--space-6) var(--space-7);
+}
+
+.hero-illustration-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-4);
+  color: var(--color-accent);
+}
+
+.hero-illustration {
+  width: 5.5rem;
+  height: 5.5rem;
+}
+
+.hero h1 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-hero);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.hero p {
+  margin: 0 0 var(--space-5);
+  color: var(--color-text-muted);
+  font-size: var(--fs-lg);
+  max-width: 46ch;
+  margin-inline: auto;
+}
+
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* 7. Card / panel (bergaris tepi tipis ala panel console) ------------------------------- */
+
+.card {
+  background: var(--color-surface-tint);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+
+.card + .card {
+  margin-top: var(--space-5);
+}
+
+.card h2 {
+  margin: 0 0 var(--space-4);
+  font-size: var(--fs-h2);
+  font-weight: 600;
+}
+
+/* Tombol yang berdiri langsung sebagai anak card (unduh, salin) dibuat
+ selebar penuh di mobile agar mudah disentuh; melebar wajar di tablet+. */
+.card > .btn,
+.copy-row .btn {
+  width: 100%;
+}
+
+.card > * + .btn {
+  margin-top: var(--space-4);
+}
+
+/* 8. Halaman Tentang (langkah cara kerja & catatan keamanan) --------------------------- */
+
+.about-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.about-steps li {
+  display: flex;
+  gap: var(--space-3);
+  align-items: baseline;
+}
+
+.about-steps__marker {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.about-steps li div {
+  color: var(--color-text-muted);
+  line-height: 1.65;
+}
+
+.about-steps li strong {
+  color: var(--color-text);
+}
+
+.about-notes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.about-notes li {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  color: var(--color-text-muted);
+  line-height: 1.65;
+}
+
+.about-notes .icon {
+  flex: 0 0 auto;
+  width: 1.3rem;
+  height: 1.3rem;
+  color: var(--color-accent);
+  margin-top: 0.15em;
+}
+
+.about-notes strong {
+  color: var(--color-text);
+}
+
+/* 9. Form (label mono utk field, tetap sans utk hint) ------------------------------------ */
+
+.form-field {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  margin-bottom: var(--space-5);
+}
+
+.card .form-field {
+  max-width: none;
+  margin-inline: 0;
+}
+
+.form-field label {
+  display: block;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+}
+
+.form-field__hint {
+  margin: 0 0 var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  font: inherit;
+  font-size: var(--fs-body);
+  min-height: var(--touch-target);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+input[type="text"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+textarea {
+  min-height: 9rem;
+  resize: vertical;
+  font-family: inherit;
+}
+
+input[readonly],
+textarea[readonly] {
+  background: var(--color-bg);
+}
+
+.key-display {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+textarea.key-display {
+  min-height: 7rem;
+}
+
+/* Input dengan ikon di sisi kiri (mis. field Kunci AES) */
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon__icon {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.input-with-icon input {
+  padding-left: calc(var(--space-3) * 2 + 1.1rem);
+}
+
+.input-with-icon .icon {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+/* Area unggah drag-and-drop. Input file ASLI tetap ada dan menutupi seluruh
+ area (opacity: 0) sehingga klik & drag-and-drop bawaan browser tetap
+ berfungsi penuh secara native. Lapisan visual di atasnya (.dropzone__content)
+ murni dekoratif (pointer-events: none) supaya klik menembus ke input. */
+.dropzone {
+  position: relative;
+  padding: var(--space-6) var(--space-4);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  text-align: center;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.dropzone__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.dropzone__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+
+.dropzone__icon {
+  color: var(--color-text-muted);
+}
+
+.dropzone__icon .icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.dropzone__title {
+  margin: 0;
+  font-weight: 500;
+}
+
+.dropzone__filename {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-accent);
+  word-break: break-all;
+}
+
+.dropzone.is-dragover,
+.dropzone.is-focused {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.dropzone.has-file {
+  border-style: solid;
+  border-color: var(--color-accent);
+}
+
+.dropzone.has-file .dropzone__icon {
+  color: var(--color-accent);
+}
+
+/* 10. Tombol (sudut tegas, huruf kapital ala perintah CLI) ------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn:hover {
+  background: var(--color-accent-hover);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.btn-secondary {
+  background: var(--color-surface-tint);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+}
+
+.btn-secondary:hover {
+  background: var(--color-border);
+}
+
+/* State sesaat setelah berhasil menyalin (lihat main.js) */
+.btn--success {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
+.btn-large {
+  padding: var(--space-4) var(--space-7);
+  font-size: var(--fs-lg);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn__icon {
+  display: flex;
+}
+
+.btn__icon .icon {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+/* Baris "input/textarea readonly + tombol salin" */
+.copy-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.copy-row input,
+.copy-row textarea {
+  flex: 1;
+}
+
+/* 11. Hasil: preview citra & badge kualitas --------------------------------------------- */
+
+.image-frame {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.result-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: calc(var(--radius-md) - 4px);
+}
+
+.quality-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin: 0 0 var(--space-4);
+}
+
+.quality-line__psnr {
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+
+.quality-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.quality-badge--good {
+  background: var(--color-badge-good-bg);
+  color: var(--color-badge-good-text);
+}
+
+.quality-badge--ok {
+  background: var(--color-badge-ok-bg);
+  color: var(--color-badge-ok-text);
+}
+
+.quality-badge--bad {
+  background: var(--color-badge-bad-bg);
+  color: var(--color-badge-bad-text);
+}
+
+/* 12. Flash messages -------------------------------------------------------------------- */
+
+.flash-messages {
+  max-width: var(--content-max);
+  margin: 0 auto var(--space-5);
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.flash {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+}
+
+.flash-error {
+  background: var(--color-error-bg);
+  color: var(--color-error-text);
+  border-left: 3px solid var(--color-error-text);
+}
+
+.flash-success {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+  border-left: 3px solid var(--color-success-text);
+}
+
+/* 13. Footer ------------------------------------------------------------------------------ */
+
+.site-footer {
+  padding-block: var(--space-4);
+}
+
+.site-footer p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  text-align: center;
+}
+
+/* 14. Breakpoint tablet (min-width: 640px) ------------------------------------------------- */
+
+@media (min-width: 640px) {
+  .nav-toggle {
+    display: none;
+  }
+
+  .nav {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    order: 0;
+    gap: var(--space-2);
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  .nav__link {
+    min-height: auto;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .nav__link--active {
+    background: var(--color-accent-soft);
+  }
+
+  .btn-group {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .btn-group .btn {
+    width: auto;
+  }
+
+  .card {
+    padding: var(--space-6);
+  }
+
+  .copy-row {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .card > .btn,
+  .copy-row .btn {
+    width: auto;
+  }
+}
+
+/* 15. Breakpoint desktop (min-width: 1024px) ------------------------------------------------ */
+
+@media (min-width: 1024px) {
+  .container {
+    padding-inline: var(--space-6);
+  }
+
+  .page {
+    padding-block: var(--space-7) var(--space-8);
+  }
+
+  .hero-illustration {
+    width: 6.5rem;
+    height: 6.5rem;
+  }
+}
+
+/* Layar sangat sempit: rapatkan sedikit spacing vertikal & ukuran dropzone */
+@media (max-width: 374px) {
+  .page {
+    padding-block: var(--space-5) var(--space-6);
+  }
+
+  .dropzone {
+    padding: var(--space-5) var(--space-3);
+  }
+}
+
+/* Viewport pendek (laptop kecil / ponsel dalam mode landscape / ponsel
+ pendek): pangkas elemen dekoratif beranda supaya tetap muat dalam satu
+ layar tanpa scroll. Dipicu oleh TINGGI viewport, bukan lebar, karena
+ masalahnya memang soal ruang vertikal, bukan horizontal. */
+@media (max-height: 700px) {
+  .page.page--home {
+    padding-block: var(--space-2);
+  }
+
+  .hero {
+    padding-block: 0;
+  }
+
+  .hero-illustration-wrap {
+    display: none;
+  }
+
+  .hero h1 {
+    margin-bottom: var(--space-2);
+  }
+
+  .hero p {
+    margin-bottom: var(--space-4);
+  }
+}

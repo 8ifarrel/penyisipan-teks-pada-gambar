@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon_copy %}
+{% block title %}Hasil Ekstraksi{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <h1>Hasil Ekstraksi</h1>
+    <p>Teks berhasil diekstraksi dan didekripsi.</p>
+  </div>
+
+  <div class="card">
+    <h2>Foto Stego</h2>
+    <div class="image-frame">
+      <img class="result-image" src="{{ preview_data_uri }}" alt="Citra stego yang diunggah">
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Teks</h2>
+    <textarea id="extracted-text" class="key-display" readonly>{{ plaintext }}</textarea>
+    <button type="button" class="btn btn-secondary" data-copy-target="#extracted-text">
+      <span class="btn__icon">{{ icon_copy() }}</span>
+      <span class="btn__label">Salin Teks</span>
+    </button>
+  </div>
+{% endblock %}

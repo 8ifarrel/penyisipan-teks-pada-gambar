@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "_icons.html" import illustration_hero %}
+{% block title %}Beranda{% endblock %}
+{% block main_class %}page--home{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="hero-illustration-wrap">{{ illustration_hero() }}</div>
+    <h1>Samarupa</h1>
+    <p>
+      Sisipkan teks ke dalam citra digital secara aman: teks dienkripsi
+      lebih dulu dengan AES-GCM, lalu disembunyikan pada citra menggunakan
+      metode Least Significant Bit (LSB).
+    </p>
+    <div class="btn-group">
+      <a class="btn btn-large" href="{{ url_for('main.sisipkan') }}">Sisipkan Teks</a>
+      <a class="btn btn-large btn-secondary" href="{{ url_for('main.ekstraksi') }}">Ekstraksi Teks</a>
+    </div>
+  </section>
+{% endblock %}

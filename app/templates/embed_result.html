@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon_download, icon_copy %}
+{% block title %}Hasil Penyisipan{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <h1>Hasil Penyisipan</h1>
+    <p>
+      Teks berhasil disisipkan. Simpan kunci AES di bawah ini sekarang,
+      kunci ini tidak disimpan oleh sistem dan dibutuhkan untuk proses ekstraksi.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Foto Stego</h2>
+    <div class="image-frame">
+      <img class="result-image" src="{{ url_for('main.pratinjau_stego', file_id=file_id) }}" alt="Citra stego hasil penyisipan">
+    </div>
+
+    {% if "baik" in quality_category %}
+      {% set badge_class = "quality-badge--good" %}
+    {% elif "diterima" in quality_category %}
+      {% set badge_class = "quality-badge--ok" %}
+    {% else %}
+      {% set badge_class = "quality-badge--bad" %}
+    {% endif %}
+    <p class="quality-line">
+      <span class="quality-badge {{ badge_class }}">{{ quality_category }}</span>
+      <span class="quality-line__psnr">PSNR: {{ psnr_display }}</span>
+    </p>
+
+    <a class="btn btn-block" href="{{ url_for('main.unduh_stego', file_id=file_id) }}">
+      <span class="btn__icon">{{ icon_download() }}</span>
+      Unduh Foto Stego
+    </a>
+  </div>
+
+  <div class="card">
+    <h2>Kunci AES</h2>
+    <p class="form-field__hint">Format heksadesimal, 32 karakter (128-bit)</p>
+    <div class="copy-row">
+      <input type="text" id="aes-key" class="key-display" readonly value="{{ key_hex }}">
+      <button type="button" class="btn btn-secondary" data-copy-target="#aes-key">
+        <span class="btn__icon">{{ icon_copy() }}</span>
+        <span class="btn__label">Salin</span>
+      </button>
+    </div>
+  </div>
+{% endblock %}
