@@ -24,7 +24,7 @@ Nama "Samarupa" berasal dari kata "samar" (tersembunyi) dan "rupa" (wujud/citra)
 
 - **Backend**: Python, [Flask](https://flask.palletsprojects.com/)
 - **Kriptografi**: [`cryptography`](https://cryptography.io/) (AES-GCM)
-- **Pengolahan citra**: encoder/decoder PNG manual (chunk parsing, unfilter/filter scanline, zlib untuk DEFLATE), [NumPy](https://numpy.org/) (operasi bit LSB & filter scanline tervectorisasi)
+- **Pengolahan citra**: [Pillow](https://python-pillow.org/), [NumPy](https://numpy.org/) (operasi bit LSB tervectorisasi)
 - **Frontend**: Jinja2, CSS murni (tanpa framework), vanilla JavaScript
 - **Testing**: [pytest](https://pytest.org/)
 

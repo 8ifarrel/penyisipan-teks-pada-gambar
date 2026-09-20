@@ -18,8 +18,8 @@ import time
 import uuid
 
 from flask import abort, current_app
+from PIL import Image
 
-from app.utils.image_types import RgbImage
 from app.utils.png_io import save_png
 
 TEMP_DIR_NAME = "tmp_stego"
@@ -50,7 +50,7 @@ def cleanup_old_temp_files() -> None:
       pass  # file mungkin sudah terhapus proses lain; abaikan
 
 
-def save_stego_image(stego_image: RgbImage) -> str:
+def save_stego_image(stego_image: Image.Image) -> str:
   """Menyimpan citra stego ke folder temporer, mengembalikan file_id-nya."""
   file_id = f"{uuid.uuid4().hex}.png"
   save_png(stego_image, os.path.join(temp_dir(), file_id))

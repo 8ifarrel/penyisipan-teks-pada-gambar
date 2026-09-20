@@ -1,5 +1,7 @@
 import os
 
+from PIL import Image
+
 from app.crypto.aes_gcm import AuthenticationError, decrypt_ciphertext, encrypt_text
 from app.metrics.quality import calculate_mse, calculate_psnr, categorize_quality
 from app.stego.lsb import CapacityError, calculate_capacity, embed_payload, extract_payload
@@ -7,7 +9,6 @@ from app.stego.payload import build_payload, parse_payload
 from app.utils.formatting import format_id_decimal, format_id_int, format_size
 from app.utils.png_io import (
   SOURCE_IDAT_TOTAL_BYTES_KEY,
-  decode_png,
   remember_source_compression_profile,
   save_png,
 )
@@ -32,10 +33,10 @@ results = []
 no = 0
 
 for cover_path, res_label in COVERS:
+  cover_image = Image.open(cover_path)
+  cover_image.load()
   with open(cover_path, "rb") as f:
-    cover_bytes = f.read()
-  cover_image = decode_png(cover_bytes)
-  remember_source_compression_profile(cover_image, cover_bytes)
+    remember_source_compression_profile(cover_image, f.read())
   width, height = cover_image.size
   cover_size_bytes = os.path.getsize(cover_path)
   capacity_bits = calculate_capacity(width, height)
@@ -104,8 +105,8 @@ for cover_path, res_label in COVERS:
     # Uji ekstraksi ulang dari FILE yang benar-benar tersimpan di disk
     # (bukan dari objek stego_image di memori), supaya pengujian ini
     # benar-benar merepresentasikan alur nyata: unggah file -> ekstraksi.
-    with open(out_path, "rb") as f:
-      stego_reloaded = decode_png(f.read())
+    stego_reloaded = Image.open(out_path)
+    stego_reloaded.load()
     try:
       extracted_payload = extract_payload(stego_reloaded)
       row["status_ekstraksi"] = "Berhasil"

@@ -8,6 +8,7 @@ import math
 
 import numpy as np
 import pytest
+from PIL import Image
 
 from app.metrics.quality import (
   MAX_PIXEL_VALUE,
@@ -15,11 +16,10 @@ from app.metrics.quality import (
   calculate_psnr,
   categorize_quality,
 )
-from app.utils.image_types import RgbImage
 
 
-def _image_from_array(array: np.ndarray) -> RgbImage:
-  return RgbImage(array.astype(np.uint8))
+def _image_from_array(array: np.ndarray) -> Image.Image:
+  return Image.fromarray(array.astype(np.uint8), mode="RGB")
 
 
 class TestCalculateMse:
