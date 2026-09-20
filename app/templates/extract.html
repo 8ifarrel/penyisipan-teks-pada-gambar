@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_icons.html" import icon_upload, icon_key %}
+{% from "_dev_info.html" import extract_dev_info %}
 {% block title %}Ekstraksi Teks{% endblock %}
 
 {% block content %}
@@ -37,4 +38,8 @@
 
     <button type="submit" class="btn btn-block">Ekstraksi Teks</button>
   </form>
+
+  {% if developer_mode %}
+    {{ extract_dev_info(dev_info) }}
+  {% endif %}
 {% endblock %}

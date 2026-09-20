@@ -1,5 +1,5 @@
 # Modul penyisipan & ekstraksi payload dengan metode LSB (1-bit paling rendah).
-#
+# 
 # Aturan penyisipan:
 #   - Disisipkan pada bit ke-0 tiap kanal warna (R, G, B) secara berurutan,
 #     dimulai dari piksel pertama hingga piksel terakhir.
@@ -38,11 +38,6 @@ def validate_png_rgb24(image: Image.Image) -> None:
   """
   Memvalidasi bahwa citra berformat PNG dan bermodel warna RGB 24-bit
   (3 kanal warna, 8 bit per kanal).
-
-  Fungsi ini publik (bukan hanya dipakai internal oleh embed_payload/
-  extract_payload) karena route Flask juga perlu memvalidasi citra di
-  awal alur, sebelum proses enkripsi/ekstraksi dijalankan, agar pesan
-  error bisa ditampilkan sedini mungkin.
 
   Raises:
     ImageValidationError: jika salah satu syarat di atas tidak terpenuhi.
@@ -117,7 +112,15 @@ def embed_payload(cover_image: Image.Image, payload: bytes) -> Image.Image:
   flat_channels[:n] = (flat_channels[:n] & LSB_MASK) | payload_bits
 
   stego_array = flat_channels.reshape(pixel_array.shape)
-  return Image.fromarray(stego_array, mode="RGB")
+  stego_image = Image.fromarray(stego_array, mode="RGB")
+
+  # Image.fromarray() membentuk objek citra baru dengan .info kosong,
+  # sehingga metadata citra cover (ICC profile, DPI, EXIF, dll.) tidak
+  # ikut terbawa secara otomatis. Disalin manual di sini agar tetap ada
+  # pada citra stego.
+  stego_image.info.update(cover_image.info)
+
+  return stego_image
 
 
 def extract_payload(stego_image: Image.Image) -> bytes:

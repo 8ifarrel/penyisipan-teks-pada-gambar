@@ -32,7 +32,7 @@
   8. Halaman Tentang (langkah cara kerja & catatan keamanan)
   9. Form (field, input, textarea, dropzone unggah, input berikon)
   10. Tombol (sudut tegas)
-  11. Hasil (preview citra, badge kualitas)
+  11. Hasil (preview citra, badge kualitas, info developer)
   12. Flash messages
   13. Footer
   14. Breakpoint tablet (min-width: 640px)
@@ -769,6 +769,84 @@ textarea.key-display {
 .quality-badge--bad {
   background: var(--color-badge-bad-bg);
   color: var(--color-badge-bad-text);
+}
+
+/* Info developer: rangkuman teknis tiap proses (dimensi/ukuran citra,
+ ukuran payload, status tiap tahap) untuk keperluan dokumentasi/pengujian,
+ disembunyikan default lewat <details> supaya tidak mengganggu pengguna
+ awam yang cuma butuh hasil akhirnya. */
+.dev-info summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.dev-info summary::before {
+  content: "> ";
+  color: var(--color-accent);
+}
+
+.dev-info[open] summary {
+  margin-bottom: var(--space-4);
+  color: var(--color-text);
+}
+
+.dev-info__list {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+}
+
+.dev-info__list dt {
+  color: var(--color-text-muted);
+}
+
+.dev-info__list dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.2em;
+  margin: 0;
+  text-align: right;
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+.dev-info__copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  vertical-align: -0.2em;
+}
+
+.dev-info__copy .icon {
+  width: 0.85em;
+  height: 0.85em;
+}
+
+.dev-info__copy:hover {
+  color: var(--color-accent);
+}
+
+.dev-info__copy--success {
+  color: var(--color-success-text);
+}
+
+.dev-info__copy--error {
+  color: var(--color-error-text);
 }
 
 /* 12. Flash messages -------------------------------------------------------------------- */

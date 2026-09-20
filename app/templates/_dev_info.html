@@ -1,0 +1,85 @@
+{% from "_icons.html" import icon_copy %}
+
+{# Panel "Info Developer": rangkuman teknis proses sisip/ekstraksi, dipakai
+ bersama oleh halaman form (embed.html, extract.html) dan halaman hasil
+ (embed_result.html, extract_result.html). dev_info diisi progresif oleh
+ app/services/embed_service.py & extract_service.py; field yang belum
+ terisi tetap bernilai "-".
+
+ Field yang bisa dihitung penuh di sisi klien (ukuran & dimensi berkas,
+ ukuran teks, perkiraan ukuran payload, kapasitas citra) diberi id="dev-..."
+ dan diperbarui langsung lewat JS (lihat initDevInfoLive() di main.js)
+ sebelum form disubmit. Field yang butuh proses di server (status
+ enkripsi/penyisipan/ekstraksi/dekripsi, PSNR, ukuran citra stego) tidak
+ diberi id, tetap "-" sampai form disubmit.
+
+ _dev_value() menampilkan tiap nilai lengkap dengan tombol salin (ikon saja).
+ Nilai yang berformat "A (B)" (hasil format_size() di
+ app/utils/formatting.py, mis. "12,300 KB (12.300 B)") dipecah jadi dua
+ bagian yang masing-masing punya tombol salin sendiri. #}
+
+{% macro _dev_copy_btn(value) %}
+<button type="button" class="dev-info__copy" data-copy-value="{{ value }}" title="Salin {{ value }}" aria-label="Salin {{ value }}">{{ icon_copy() }}</button>
+{% endmacro %}
+
+{% macro _dev_value(text) %}
+{%- if text == "-" -%}
+-
+{%- elif " (" in text and text.endswith(")") -%}
+{%- set primary = text.split(" (")[0] -%}
+{%- set secondary = text[(primary | length) + 2 : -1] -%}
+{{ primary }}{{ _dev_copy_btn(primary) }} ({{ secondary }}{{ _dev_copy_btn(secondary) }})
+{%- else -%}
+{{ text }}{{ _dev_copy_btn(text) }}
+{%- endif -%}
+{% endmacro %}
+
+{% macro embed_dev_info(dev_info) %}
+<details class="card dev-info">
+  <summary>Info Developer</summary>
+  <dl class="dev-info__list">
+    <dt>Dimensi Citra Cover</dt>
+    <dd id="dev-cover-dimensions">{{ _dev_value(dev_info.cover_dimensions) }}</dd>
+    <dt>Ukuran Citra Cover</dt>
+    <dd id="dev-cover-size">{{ _dev_value(dev_info.cover_size) }}</dd>
+    <dt>Ukuran Teks Asli</dt>
+    <dd id="dev-text-size">{{ _dev_value(dev_info.text_size) }}</dd>
+    <dt>Ukuran Payload</dt>
+    <dd id="dev-payload-size">{{ _dev_value(dev_info.payload_size) }}</dd>
+    <dt>Kapasitas Citra</dt>
+    <dd id="dev-capacity-bits">{{ _dev_value(dev_info.capacity_bits) }}</dd>
+    <dt>Status Kapasitas</dt>
+    <dd id="dev-capacity-status">{{ _dev_value(dev_info.capacity_status) }}</dd>
+    <dt>Status Enkripsi</dt>
+    <dd>{{ _dev_value(dev_info.encryption_status) }}</dd>
+    <dt>Status Penyisipan</dt>
+    <dd>{{ _dev_value(dev_info.embed_status) }}</dd>
+    <dt>Ukuran Citra Stego</dt>
+    <dd>{{ _dev_value(dev_info.stego_size) }}</dd>
+    <dt>PSNR</dt>
+    <dd>{{ _dev_value(dev_info.psnr) }}</dd>
+    <dt>Kategori Kualitas Citra Stego</dt>
+    <dd>{{ _dev_value(dev_info.quality_category) }}</dd>
+  </dl>
+</details>
+{% endmacro %}
+
+{% macro extract_dev_info(dev_info) %}
+<details class="card dev-info">
+  <summary>Info Developer</summary>
+  <dl class="dev-info__list">
+    <dt>Dimensi Citra Stego</dt>
+    <dd id="dev-stego-dimensions">{{ _dev_value(dev_info.stego_dimensions) }}</dd>
+    <dt>Ukuran Citra Stego</dt>
+    <dd id="dev-stego-size">{{ _dev_value(dev_info.stego_size) }}</dd>
+    <dt>Ukuran Payload</dt>
+    <dd>{{ _dev_value(dev_info.payload_size) }}</dd>
+    <dt>Ukuran Teks Hasil Dekripsi</dt>
+    <dd>{{ _dev_value(dev_info.text_size) }}</dd>
+    <dt>Status Ekstraksi</dt>
+    <dd>{{ _dev_value(dev_info.extraction_status) }}</dd>
+    <dt>Status Dekripsi</dt>
+    <dd>{{ _dev_value(dev_info.decryption_status) }}</dd>
+  </dl>
+</details>
+{% endmacro %}

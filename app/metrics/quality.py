@@ -12,21 +12,9 @@
 #   20 dB <= PSNR <= 30 dB -> "Kualitas citra stego masih bisa diterima"
 #   PSNR > 30 dB           -> "Kualitas citra stego baik"
 #
-# Catatan pilihan perhitungan MSE pada citra RGB:
-# Rumus MSE di atas menulis I(i,j) dan K(i,j) tanpa indeks kanal warna
-# eksplisit, dan pembagi berupa m x n (jumlah piksel spasial, bukan jumlah
-# elemen array RGB yang sudah dikali 3 kanal). Pada praktiknya, untuk citra
-# berwarna terdapat dua pendekatan yang umum dipakai di literatur:
-#   (1) hitung MSE per kanal (R, K, G masing-masing sebagai "citra" m x n
-#       tersendiri), lalu rata-ratakan MSE ketiga kanal tersebut; atau
-#   (2) hitung satu MSE atas seluruh elemen array RGB (m x n x 3 elemen)
-#       sekaligus, yaitu sum_i sum_j sum_c (I-K)^2 dibagi (m*n*3).
-# Karena tiap kanal memiliki jumlah piksel m x n yang identik, kedua
-# pendekatan tersebut MATEMATIS EKUIVALEN (rata-rata dari rata-rata dengan
-# bobot sama = rata-rata gabungan). Modul ini memilih pendekatan (2), yaitu
-# menghitung langsung pada seluruh elemen array RGB via np.mean(), karena
-# lebih ringkas, tervectorisasi penuh oleh numpy tanpa perlu iterasi per
-# kanal, dan hasilnya identik dengan pendekatan (1).
+# MSE dihitung langsung atas seluruh elemen array RGB (m x n x 3 elemen)
+# lewat np.mean(), hasilnya identik dengan menghitung MSE tiap kanal warna
+# secara terpisah lalu dirata-ratakan.
 
 import math
 
@@ -40,9 +28,6 @@ def calculate_mse(cover_image, stego_image) -> float:
   Menghitung nilai MSE antara citra cover dan citra stego.
 
   Rumus: MSE = (1/(m*n)) * sum_i sum_j (I(i,j) - K(i,j))^2
-
-  Lihat catatan pilihan perhitungan di bagian atas modul ini mengenai
-  penerapan rumus tersebut pada citra RGB (3 kanal warna).
 
   Args:
     cover_image: objek PIL.Image (mode RGB), sebagai citra I.

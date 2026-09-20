@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_icons.html" import icon_upload %}
+{% from "_dev_info.html" import embed_dev_info %}
 {% block title %}Sisipkan Teks{% endblock %}
 
 {% block content %}
@@ -31,4 +32,8 @@
 
     <button type="submit" class="btn btn-block">Sisipkan Teks</button>
   </form>
+
+  {% if developer_mode %}
+    {{ embed_dev_info(dev_info) }}
+  {% endif %}
 {% endblock %}

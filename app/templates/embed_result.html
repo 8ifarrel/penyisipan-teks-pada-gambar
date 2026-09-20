@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_icons.html" import icon_download, icon_copy %}
+{% from "_dev_info.html" import embed_dev_info %}
 {% block title %}Hasil Penyisipan{% endblock %}
 
 {% block content %}
@@ -16,7 +17,7 @@
     <div class="image-frame">
       <img class="result-image" src="{{ url_for('main.pratinjau_stego', file_id=file_id) }}" alt="Citra stego hasil penyisipan">
     </div>
-
+    
     {% if "baik" in quality_category %}
       {% set badge_class = "quality-badge--good" %}
     {% elif "diterima" in quality_category %}
@@ -46,4 +47,8 @@
       </button>
     </div>
   </div>
+
+  {% if developer_mode %}
+    {{ embed_dev_info(dev_info) }}
+  {% endif %}
 {% endblock %}

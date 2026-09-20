@@ -1,11 +1,11 @@
 # Modul pembentukan & pemisahan payload.
-#
+# 
 # Struktur payload (urutan byte tetap):
 #   1. Header              (4 byte, unsigned integer, big-endian)
 #   2. Nonce               (12 byte)
 #   3. Authentication tag  (16 byte)
 #   4. Ciphertext          (panjang plaintext UTF-8)
-#
+# 
 # Header disimpan/dibaca menggunakan modul `struct` Python, dengan format
 # karakter unsigned integer 4 byte big-endian (">I") agar deterministik
 # terlepas dari byte order platform yang menjalankan sistem.

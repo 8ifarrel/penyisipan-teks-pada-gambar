@@ -8,27 +8,16 @@
 #
 # Library yang digunakan: `cryptography` (cryptography.hazmat.primitives.ciphers.aead.AESGCM)
 #
-# Catatan implementasi mengenai authentication tag:
-# Library `cryptography` (mengikuti konvensi umum AEAD) menempelkan
-# authentication tag di akhir ciphertext pada AESGCM.encrypt(), dan
-# mengharapkan ciphertext+tag tergabung saat AESGCM.decrypt(). Pada modul ini,
-# ciphertext dan tag SELALU dipisahkan secara eksplisit menjadi dua nilai
-# terpisah (karena payload penyisipan menyimpan nonce, authentication tag,
-# dan ciphertext sebagai komponen berbeda), dan digabungkan kembali hanya
-# sesaat sebelum dipanggilkan ke library.
+# Ciphertext dan authentication tag pada modul ini selalu berupa dua nilai
+# bytes terpisah (bukan tergabung di akhir buffer seperti keluaran default
+# AESGCM.encrypt()), karena payload penyisipan menyimpan nonce, tag, dan
+# ciphertext sebagai tiga komponen berbeda. Keduanya digabungkan kembali
+# hanya saat dipanggilkan ke AESGCM.encrypt()/decrypt().
 #
-# Verifikasi tag TIDAK diimplementasikan ulang secara manual (mis. dengan
-# menghitung ulang GHASH sendiri) karena AES-GCM adalah skema AEAD yang
-# verifikasi keasliannya terikat secara kriptografis dengan proses
-# dekripsinya (bukti keaslian baru bisa dipastikan setelah tag diverifikasi
-# secara utuh menggunakan primitif GCM). Mengimplementasikan ulang verifikasi
-# tag secara manual berisiko menghasilkan perbandingan yang tidak
-# constant-time atau proses yang tidak sesuai standar, sehingga pembentukan
-# authentication tag pembanding dan pembandingan T = T' dipetakan ke satu
-# panggilan AESGCM.decrypt() yang atomik: jika tag tidak valid, library
-# melempar cryptography.exceptions.InvalidTag sebelum plaintext apa pun
-# dikembalikan ke pemanggil. Exception tersebut ditangkap dan dilempar ulang
-# sebagai AuthenticationError yang jelas.
+# Verifikasi authentication tag dilakukan sepenuhnya oleh AESGCM.decrypt():
+# jika tag tidak valid, library melempar cryptography.exceptions.InvalidTag,
+# yang ditangkap di decrypt_ciphertext() dan dilempar ulang sebagai
+# AuthenticationError.
 
 import secrets
 
@@ -118,12 +107,8 @@ def decrypt_ciphertext(key: bytes, nonce: bytes, tag: bytes, ciphertext: bytes) 
 
   Alur:
    1. Terima nonce, authentication tag, key, dan ciphertext
-   2. Bentuk authentication tag pembanding (T') dan bandingkan dengan
-    authentication tag (T) yang diberikan. Jika T != T', proses
-    dihentikan dan AuthenticationError dilempar (lihat catatan
-    implementasi di bagian atas modul ini mengenai mengapa verifikasi
-    ini dilakukan melalui satu panggilan AESGCM.decrypt() yang atomik,
-    bukan perbandingan tag secara manual)
+   2. Verifikasi authentication tag (T) terhadap tag pembanding (T'). Jika
+    T != T', proses dihentikan dan AuthenticationError dilempar
    3. Jika T = T' -> dekripsi ciphertext dengan key & nonce
    4. Decode hasil dekripsi dari bytes ke teks dengan UTF-8
 
