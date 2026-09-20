@@ -30,9 +30,9 @@ def calculate_mse(cover_image, stego_image) -> float:
   Rumus: MSE = (1/(m*n)) * sum_i sum_j (I(i,j) - K(i,j))^2
 
   Args:
-    cover_image: objek PIL.Image (mode RGB), sebagai citra I.
-    stego_image: objek PIL.Image (mode RGB) dengan dimensi yang sama
-      dengan cover_image, sebagai citra K.
+    cover_image: RgbImage (lihat app.utils.image_types), sebagai citra I.
+    stego_image: RgbImage dengan dimensi yang sama dengan cover_image,
+      sebagai citra K.
 
   Returns:
     Nilai MSE (float). Bernilai 0.0 jika kedua citra identik persis.
@@ -42,11 +42,11 @@ def calculate_mse(cover_image, stego_image) -> float:
       karena MSE piksel-demi-piksel hanya terdefinisi untuk citra
       dengan ukuran yang sama.
   """
-  # Konversi ke float64 SEBELUM dikurangkan, karena piksel PIL bertipe uint8
-  # (0-255), sehingga pengurangan langsung pada tipe uint8 akan underflow
-  # (wrap-around) alih-alih menghasilkan nilai negatif yang benar.
-  cover_array = np.asarray(cover_image, dtype=np.float64)
-  stego_array = np.asarray(stego_image, dtype=np.float64)
+  # Konversi ke float64 SEBELUM dikurangkan, karena array piksel bertipe
+  # uint8 (0-255), sehingga pengurangan langsung pada tipe uint8 akan
+  # underflow (wrap-around) alih-alih menghasilkan nilai negatif yang benar.
+  cover_array = cover_image.pixels.astype(np.float64)
+  stego_array = stego_image.pixels.astype(np.float64)
 
   if cover_array.shape != stego_array.shape:
     raise ValueError(

@@ -10,16 +10,17 @@
 #         x'_i = x_i - (x_i mod 2) + m_i
 #     yang secara bitwise setara dengan: x'_i = (x_i & ~1) | m_i
 #
-# Library yang digunakan: Pillow (PIL.Image) untuk baca/tulis citra PNG RGB
-# 24-bit, dan numpy untuk operasi bit secara vectorized (penting agar tetap
-# efisien pada citra berukuran besar).
+# Library yang digunakan: numpy untuk operasi bit secara vectorized (penting
+# agar tetap efisien pada citra berukuran besar). Baca/tulis PNG ditangani
+# encoder/decoder manual di app/utils/png_io.py, tidak dipakai langsung di
+# sini agar modul ini tidak bergantung pada urusan encoding PNG.
 
 import struct
 
 import numpy as np
-from PIL import Image
 
 from app.stego.payload import HEADER_LEN_BYTES, HEADER_STRUCT_FORMAT
+from app.utils.image_types import RgbImage
 
 CHANNELS = 3  # RGB
 BITS_PER_BYTE = 8
@@ -34,15 +35,16 @@ class CapacityError(Exception):
   """Dilempar jika kapasitas citra tidak cukup untuk menampung payload."""
 
 
-def validate_png_rgb24(image: Image.Image) -> None:
+def validate_png_rgb24(image: RgbImage) -> None:
   """
-  Memvalidasi bahwa citra berformat PNG dan bermodel warna RGB 24-bit
+  Memvalidasi bahwa array piksel citra bermodel warna RGB 24-bit
   (3 kanal warna, 8 bit per kanal).
 
   Raises:
     ImageValidationError: jika salah satu syarat di atas tidak terpenuhi.
   """
-  if image.format != "PNG" or image.mode != "RGB":
+  pixels = image.pixels
+  if pixels.dtype != np.uint8 or pixels.ndim != 3 or pixels.shape[2] != CHANNELS:
     raise ImageValidationError(
       "Citra harus berformat PNG dan bermodel warna RGB 24-bit."
     )
@@ -65,7 +67,7 @@ def calculate_capacity(width: int, height: int, channels: int = CHANNELS) -> int
   return width * height * channels
 
 
-def embed_payload(cover_image: Image.Image, payload: bytes) -> Image.Image:
+def embed_payload(cover_image: RgbImage, payload: bytes) -> RgbImage:
   """
   Menyisipkan payload ke dalam citra cover menggunakan metode LSB.
 
@@ -79,11 +81,11 @@ def embed_payload(cover_image: Image.Image, payload: bytes) -> Image.Image:
    7. Susun ulang array menjadi citra stego
 
   Args:
-    cover_image: objek PIL.Image hasil Image.open() pada file PNG RGB 24-bit.
+    cover_image: RgbImage berisi array piksel PNG RGB 24-bit.
     payload: bytes payload (hasil app.stego.payload.build_payload).
 
   Returns:
-    PIL.Image (mode "RGB") berisi citra stego.
+    RgbImage berisi citra stego.
 
   Raises:
     ImageValidationError: jika citra bukan PNG dan/atau bukan RGB 24-bit.
@@ -101,7 +103,7 @@ def embed_payload(cover_image: Image.Image, payload: bytes) -> Image.Image:
       f"(kapasitas {capacity_bits} bit, payload {payload_bits_len} bit)."
     )
 
-  pixel_array = np.array(cover_image, dtype=np.uint8)  # shape: (H, W, 3)
+  pixel_array = cover_image.pixels  # shape: (H, W, 3)
   flat_channels = pixel_array.reshape(-1).copy()  # deret kanal R,G,B,R,G,B,...
 
   # MSB-first per byte agar konsisten dengan urutan pada extract_payload().
@@ -112,10 +114,10 @@ def embed_payload(cover_image: Image.Image, payload: bytes) -> Image.Image:
   flat_channels[:n] = (flat_channels[:n] & LSB_MASK) | payload_bits
 
   stego_array = flat_channels.reshape(pixel_array.shape)
-  return Image.fromarray(stego_array, mode="RGB")
+  return RgbImage(stego_array)
 
 
-def extract_payload(stego_image: Image.Image) -> bytes:
+def extract_payload(stego_image: RgbImage) -> bytes:
   """
   Mengekstraksi payload dari citra stego menggunakan metode LSB.
 
@@ -128,7 +130,7 @@ def extract_payload(stego_image: Image.Image) -> bytes:
    5. Rekonstruksi seluruh bit menjadi bytes payload lengkap
 
   Args:
-    stego_image: objek PIL.Image hasil Image.open() pada file PNG RGB 24-bit.
+    stego_image: RgbImage berisi array piksel PNG RGB 24-bit.
 
   Returns:
     bytes payload lengkap (header + nonce + tag + ciphertext).
@@ -140,7 +142,7 @@ def extract_payload(stego_image: Image.Image) -> bytes:
   """
   validate_png_rgb24(stego_image)
 
-  pixel_array = np.array(stego_image, dtype=np.uint8)
+  pixel_array = stego_image.pixels
   flat_channels = pixel_array.reshape(-1)
 
   header_bits_len = HEADER_LEN_BYTES * BITS_PER_BYTE  # 32 bit
