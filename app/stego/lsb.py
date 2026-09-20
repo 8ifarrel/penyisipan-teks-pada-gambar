@@ -112,15 +112,7 @@ def embed_payload(cover_image: Image.Image, payload: bytes) -> Image.Image:
   flat_channels[:n] = (flat_channels[:n] & LSB_MASK) | payload_bits
 
   stego_array = flat_channels.reshape(pixel_array.shape)
-  stego_image = Image.fromarray(stego_array, mode="RGB")
-
-  # Image.fromarray() membentuk objek citra baru dengan .info kosong,
-  # sehingga metadata citra cover (ICC profile, DPI, EXIF, dll.) tidak
-  # ikut terbawa secara otomatis. Disalin manual di sini agar tetap ada
-  # pada citra stego.
-  stego_image.info.update(cover_image.info)
-
-  return stego_image
+  return Image.fromarray(stego_array, mode="RGB")
 
 
 def extract_payload(stego_image: Image.Image) -> bytes:

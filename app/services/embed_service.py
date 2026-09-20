@@ -16,6 +16,7 @@ from app.stego.lsb import (
 from app.stego.payload import build_payload
 from app.utils.dev_info import empty_dev_info
 from app.utils.formatting import format_id_decimal, format_id_int, format_size
+from app.utils.png_io import SOURCE_IDAT_TOTAL_BYTES_KEY
 from app.utils.temp_files import cleanup_old_temp_files, save_stego_image, temp_dir
 from app.utils.uploads import file_size_bytes, open_uploaded_image
 
@@ -120,6 +121,12 @@ def handle_submit():
 
   # 6. Sisipkan payload dengan LSB
   stego_image = embed_payload(cover_image, payload)
+  # embed_payload() mengembalikan objek citra baru (.info kosong), jadi
+  # target level kompresi cover asli diteruskan manual di sini supaya
+  # save_png() nanti tetap bisa menyesuaikan level kompresi citra stego
+  # dengan citra cover aslinya (lihat app/utils/png_io.py).
+  if SOURCE_IDAT_TOTAL_BYTES_KEY in cover_image.info:
+    stego_image.info[SOURCE_IDAT_TOTAL_BYTES_KEY] = cover_image.info[SOURCE_IDAT_TOTAL_BYTES_KEY]
   if dev_info is not None:
     dev_info["embed_status"] = "Berhasil"
 

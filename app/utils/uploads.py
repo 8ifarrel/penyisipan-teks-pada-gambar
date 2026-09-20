@@ -7,7 +7,7 @@ import os
 
 from PIL import Image, UnidentifiedImageError
 
-from app.utils.png_io import remember_source_png_profile
+from app.utils.png_io import remember_source_compression_profile
 
 
 def open_uploaded_image(file_storage):
@@ -18,9 +18,9 @@ def open_uploaded_image(file_storage):
   route bisa menampilkan pesan error yang ramah alih-alih crash.
 
   Bytes mentahnya dibaca lebih dulu (bukan langsung diserahkan ke
-  Image.open() dari stream) supaya profil encoder PNG aslinya bisa
-  direkam lewat remember_source_png_profile(), dipakai save_png() nanti
-  agar gaya penulisan citra stego mengikuti citra cover aslinya.
+  Image.open() dari stream) supaya ukuran kompresi PNG aslinya bisa
+  direkam lewat remember_source_compression_profile(), dipakai save_png()
+  nanti agar level kompresi citra stego mengikuti citra cover aslinya.
   """
   if file_storage is None or file_storage.filename == "":
     return None
@@ -29,7 +29,7 @@ def open_uploaded_image(file_storage):
     file_storage.stream.seek(0)
     image = Image.open(io.BytesIO(raw_bytes))
     image.load()  # paksa dekode penuh sekarang agar berkas rusak terdeteksi di sini
-    remember_source_png_profile(image, raw_bytes)
+    remember_source_compression_profile(image, raw_bytes)
     return image
   except (UnidentifiedImageError, OSError):
     return None
