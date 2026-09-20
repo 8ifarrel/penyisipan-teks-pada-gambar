@@ -1,5 +1,7 @@
 # Samarupa
 
+> **Catatan arsip**: branch ini (`archive/adaptive-png-fidelity`) menyimpan versi Samarupa yang citra stego-nya disesuaikan penuh dengan karakteristik encoder citra cover asli (metadata, urutan chunk, dan level kompresi PNG-nya). Fitur ini kemudian dipangkas di `main`, hanya bagian penyesuaian level kompresi yang dipertahankan; branch ini disimpan sebagai referensi/cadangan atas versi lengkapnya.
+
 Aplikasi web steganografi yang menyisipkan teks rahasia ke dalam citra digital. Teks dienkripsi terlebih dahulu dengan **AES-128-GCM**, lalu payload hasil enkripsinya disisipkan ke citra menggunakan metode **Least Significant Bit (LSB)**.
 
 Nama "Samarupa" berasal dari kata "samar" (tersembunyi) dan "rupa" (wujud/citra): wujud yang menyamarkan pesan di dalamnya.
@@ -9,6 +11,7 @@ Nama "Samarupa" berasal dari kata "samar" (tersembunyi) dan "rupa" (wujud/citra)
 - **Sisipkan Teks**: unggah citra PNG (RGB 24-bit) + tulis teks, sistem mengenkripsi teks dengan AES-GCM dan menyisipkan hasilnya ke citra lewat LSB. Kunci AES ditampilkan sekali di halaman hasil (hex, 32 karakter/128-bit) untuk disimpan sendiri oleh pengguna.
 - **Ekstraksi Teks**: unggah citra stego + masukkan kunci AES, sistem mengekstraksi payload dari citra dan mendekripsinya kembali menjadi teks asli.
 - **Ukur kualitas citra**: setiap penyisipan dihitung nilai MSE & PSNR-nya, lalu dikategorikan (baik / masih bisa diterima / menurun drastis).
+- **Kesesuaian encoder PNG (apple-to-apple)**: citra stego disimpan dengan gaya penulisan PNG yang disesuaikan dengan citra cover asli, ICC profile/DPI/EXIF/chunk teks disalin, urutan chunk ancillary (iCCP/eXIf/pHYs/tEXt/tIME) disusun ulang mengikuti citra sumber, dan level kompresi zlib serta ukuran chunk IDAT dicocokkan lewat pencarian (binary search) berdasarkan ukuran IDAT citra sumber, bukan dipukul rata ke satu gaya encoder tertentu. Lihat `app/utils/png_io.py`.
 - **Kunci AES tidak pernah disimpan di server**, hanya muncul sekali di response halaman hasil.
 - Citra stego disimpan sementara di server (maksimal 15 menit) untuk keperluan pratinjau & unduhan, lalu dihapus otomatis.
 
@@ -32,15 +35,22 @@ Nama "Samarupa" berasal dari kata "samar" (tersembunyi) dan "rupa" (wujud/citra)
 
 ```
 app/
-  crypto/      modul enkripsi & dekripsi AES-GCM
-  metrics/     modul penghitungan MSE, PSNR, kategori kualitas
-  stego/       modul pembentukan payload & penyisipan/ekstraksi LSB
-  static/      CSS & JavaScript
-  templates/   halaman Jinja2 (beranda, sisipkan, ekstraksi, hasil, tentang)
-  routes.py    endpoint Flask (menghubungkan semua modul di atas)
-  __init__.py  application factory
-tests/         unit test untuk tiap modul (pytest)
-run.py         entry point menjalankan development server
+  crypto/         modul enkripsi & dekripsi AES-GCM
+  metrics/        modul penghitungan MSE, PSNR, kategori kualitas
+  stego/          modul pembentukan payload & penyisipan/ekstraksi LSB
+  services/       logic tiap fitur (embed_service.py, extract_service.py),
+                   dipanggil langsung oleh routes.py
+  utils/          helper: format angka/ukuran, baca upload, file temporer,
+                   dan penyimpanan PNG yang menyesuaikan encoder citra
+                   sumber (png_io.py)
+  static/         CSS & JavaScript
+  templates/      halaman Jinja2 (beranda, sisipkan, ekstraksi, hasil, tentang)
+  routes.py       tabel routing Flask (endpoint -> service)
+  __init__.py     application factory
+tests/            unit test untuk tiap modul (pytest)
+run.py            entry point menjalankan development server
+run_pengujian_pintu.py   skrip batch pengujian sisip + ekstraksi ulang
+                          (langsung memanggil modul app/, bukan lewat HTTP)
 ```
 
 ## Instalasi & menjalankan
