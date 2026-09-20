@@ -1,14 +1,21 @@
-# Penyimpanan PNG dengan level kompresi zlib yang disesuaikan (adaptif)
-# dengan level kompresi citra cover aslinya, bukan dipukul rata ke satu
-# level tertentu. Level kompresi tidak pernah tersimpan sebagai field di
-# file PNG mana pun (murni pengaturan encoder saat menyimpan), jadi
-# ditebak lewat pick_compress_level() dengan membandingkan ukuran hasil
-# kompresi di tiap level ke ukuran IDAT citra sumber.
+# Penyimpanan PNG yang menyesuaikan (adaptif) karakteristik encoder citra
+# cover aslinya, bukan dipukul rata ke satu profil tertentu:
+#   - Level kompresi zlib: tidak pernah tersimpan sebagai field di file PNG
+#     mana pun (murni pengaturan encoder saat menyimpan), jadi ditebak lewat
+#     pick_compress_level() dengan membandingkan ukuran hasil kompresi di
+#     tiap level ke ukuran total IDAT citra sumber.
+#   - Ukuran potongan (chunking) IDAT: encoder berbeda memecah data hasil
+#     kompresi jadi beberapa chunk IDAT dengan ukuran buffer internal yang
+#     berbeda-beda (mis. Pillow 65536 byte, libpng 8192 byte). Ukuran ini
+#     dideteksi dari citra sumber lewat remember_source_compression_profile()
+#     dan diterapkan ulang saat menyimpan lewat _idat_chunk_size(), supaya
+#     jumlah/ukuran chunk IDAT citra hasil mengikuti citra sumbernya.
 
+import contextlib
 import io
 import struct
 
-from PIL import Image
+from PIL import Image, ImageFile
 
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
@@ -16,6 +23,10 @@ PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 # disimpan oleh remember_source_compression_profile(), dibaca save_png()
 # lewat pick_compress_level() untuk menyesuaikan level kompresi.
 SOURCE_IDAT_TOTAL_BYTES_KEY = "_source_idat_total_bytes"
+
+# Key pada image.info tempat ukuran buffer IDAT citra cover asli disimpan,
+# dibaca save_png() untuk menyesuaikan ukuran potongan chunk IDAT.
+SOURCE_IDAT_CHUNK_SIZE_KEY = "_source_idat_chunk_size"
 
 DEFAULT_COMPRESS_LEVEL = 6  # level kompresi zlib bawaan Pillow
 
@@ -40,14 +51,38 @@ def _iter_chunks(png_bytes: bytes):
 
 def remember_source_compression_profile(image: Image.Image, raw_bytes: bytes) -> None:
   """
-  Merekam ukuran total chunk IDAT citra asli ke
-  image.info[SOURCE_IDAT_TOTAL_BYTES_KEY]. Dibaca pick_compress_level()
-  untuk menyesuaikan level kompresi citra hasil dengan citra sumbernya.
+  Merekam profil kompresi PNG citra asli ke image.info, dibaca save_png()
+  supaya citra hasil mengikuti karakteristik encoder sumbernya:
+    - SOURCE_IDAT_TOTAL_BYTES_KEY: ukuran total seluruh chunk IDAT, dipakai
+      pick_compress_level() untuk menyesuaikan level kompresi.
+    - SOURCE_IDAT_CHUNK_SIZE_KEY: ukuran buffer chunk IDAT (byte terbesar
+      di antara seluruh chunk IDAT), dipakai _idat_chunk_size() untuk
+      menyesuaikan jumlah/ukuran potongan chunk IDAT. Hanya diisi jika
+      citra sumber punya lebih dari satu chunk IDAT (ukuran buffer encoder
+      sumber tidak bisa disimpulkan dari satu chunk saja).
   Tidak melakukan apa-apa jika raw_bytes bukan PNG valid.
   """
-  idat_total_bytes = sum(length for ctype, length, _ in _iter_chunks(raw_bytes) if ctype == b"IDAT")
+  idat_lengths = [length for ctype, length, _ in _iter_chunks(raw_bytes) if ctype == b"IDAT"]
+  idat_total_bytes = sum(idat_lengths)
   if idat_total_bytes:
     image.info[SOURCE_IDAT_TOTAL_BYTES_KEY] = idat_total_bytes
+  if len(idat_lengths) > 1:
+    image.info[SOURCE_IDAT_CHUNK_SIZE_KEY] = max(idat_lengths)
+
+
+@contextlib.contextmanager
+def _idat_chunk_size(chunk_size):
+  """
+  Mengganti sementara ukuran buffer yang dipakai Pillow untuk memecah data
+  IDAT terkompresi menjadi beberapa chunk saat menyimpan PNG (dikembalikan
+  ke nilai semula setelah blok `with` selesai, termasuk jika terjadi error).
+  """
+  original = ImageFile.MAXBLOCK
+  ImageFile.MAXBLOCK = chunk_size
+  try:
+    yield
+  finally:
+    ImageFile.MAXBLOCK = original
 
 
 def _idat_bytes_at_level(image: Image.Image, compress_level: int) -> int:
@@ -104,11 +139,11 @@ def pick_compress_level(image: Image.Image, target_idat_bytes) -> int:
 
 def save_png(image: Image.Image, destination) -> None:
   """
-  Menyimpan citra sebagai PNG dengan level kompresi yang disesuaikan
-  dengan citra cover asli (lihat pick_compress_level()) jika
-  image.info[SOURCE_IDAT_TOTAL_BYTES_KEY] tersedia (lihat
-  remember_source_compression_profile()). Jika tidak, dipakai level
-  kompresi bawaan Pillow.
+  Menyimpan citra sebagai PNG dengan level kompresi dan ukuran potongan
+  chunk IDAT yang disesuaikan dengan citra cover asli (lihat
+  pick_compress_level() dan _idat_chunk_size()) jika profilnya tersedia
+  di image.info (lihat remember_source_compression_profile()). Jika
+  tidak, dipakai pengaturan bawaan Pillow.
 
   Args:
     destination: path (str/os.PathLike) atau objek mirip file yang
@@ -116,9 +151,14 @@ def save_png(image: Image.Image, destination) -> None:
   """
   target_idat_bytes = image.info.get(SOURCE_IDAT_TOTAL_BYTES_KEY)
   compress_level = pick_compress_level(image, target_idat_bytes)
+  chunk_size = image.info.get(SOURCE_IDAT_CHUNK_SIZE_KEY)
 
   buffer = io.BytesIO()
-  image.save(buffer, format="PNG", compress_level=compress_level)
+  if chunk_size:
+    with _idat_chunk_size(chunk_size):
+      image.save(buffer, format="PNG", compress_level=compress_level)
+  else:
+    image.save(buffer, format="PNG", compress_level=compress_level)
   data = buffer.getvalue()
 
   if hasattr(destination, "write"):

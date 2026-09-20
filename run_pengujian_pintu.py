@@ -7,11 +7,7 @@ from app.metrics.quality import calculate_mse, calculate_psnr, categorize_qualit
 from app.stego.lsb import CapacityError, calculate_capacity, embed_payload, extract_payload
 from app.stego.payload import build_payload, parse_payload
 from app.utils.formatting import format_id_decimal, format_id_int, format_size
-from app.utils.png_io import (
-  SOURCE_IDAT_TOTAL_BYTES_KEY,
-  remember_source_compression_profile,
-  save_png,
-)
+from app.utils.png_io import remember_source_compression_profile, save_png
 
 COVERS = [
   (r"C:\Users\Farrel Sirah\Documents\.Skripsi\pengujian\img\pintu\pintu_128x.png", "128x"),
@@ -78,8 +74,7 @@ for cover_path, res_label in COVERS:
     row["status_kapasitas"] = "Muat"
 
     stego_image = embed_payload(cover_image, payload)
-    if SOURCE_IDAT_TOTAL_BYTES_KEY in cover_image.info:
-      stego_image.info[SOURCE_IDAT_TOTAL_BYTES_KEY] = cover_image.info[SOURCE_IDAT_TOTAL_BYTES_KEY]
+    stego_image.info.update(cover_image.info)
     row["status_penyisipan"] = "Berhasil"
 
     mse = calculate_mse(cover_image, stego_image)
