@@ -240,11 +240,6 @@ h3 {
   text-decoration: none;
 }
 
-.brand::before {
-  content: "#> ";
-  color: var(--color-accent);
-}
-
 /* Tombol hamburger: tampil di mobile, disembunyikan mulai breakpoint tablet */
 .nav-toggle {
   display: inline-flex;
