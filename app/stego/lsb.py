@@ -9,7 +9,7 @@
 #   - Penggantian bit LSB untuk k=1:
 #         x'_i = x_i - (x_i mod 2) + m_i
 #     yang secara bitwise setara dengan: x'_i = (x_i & ~1) | m_i
-#
+# 
 # Library yang digunakan: Pillow (PIL.Image) untuk baca/tulis citra PNG RGB
 # 24-bit, dan numpy untuk operasi bit secara vectorized (penting agar tetap
 # efisien pada citra berukuran besar).
