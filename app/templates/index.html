@@ -6,11 +6,11 @@
 {% block content %}
   <section class="hero">
     <div class="hero-illustration-wrap">{{ illustration_hero() }}</div>
-    <h1>Samarupa</h1>
+    <h1>Penyisipan Teks pada Gambar</h1>
     <p>
-      Sisipkan teks ke dalam citra digital secara aman: teks dienkripsi
-      lebih dulu dengan AES-GCM, lalu disembunyikan pada citra menggunakan
-      metode Least Significant Bit (LSB).
+      Menyembunyikan teks ke dalam citra digital secara aman: teks
+      dienkripsi lebih dulu dengan AES-GCM, lalu disisipkan ke piksel
+      citra menggunakan metode Least Significant Bit (LSB).
     </p>
     <div class="btn-group">
       <a class="btn btn-large" href="{{ url_for('main.sisipkan') }}">Sisipkan Teks</a>

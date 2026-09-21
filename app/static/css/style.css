@@ -81,7 +81,11 @@
   --fs-lg: 1.125rem;
   --fs-h2: 1.15rem;
   --fs-h1: clamp(1.65rem, 1.3rem + 1.6vw, 2.25rem);
-  --fs-hero: clamp(2.4rem, 1.6rem + 4.5vw, 3.75rem);
+  /* Diperkecil dari clamp(2.4rem, 1.6rem + 4.5vw, 3.75rem): nama halaman
+   sekarang berupa frasa deskriptif panjang ("Penyisipan Teks pada
+   Gambar"), bukan satu kata brand pendek, jadi ukuran hero sebelumnya
+   bikin judul kepanjangan/wrap berlebihan di layar sempit. */
+  --fs-hero: clamp(1.75rem, 1.3rem + 2.5vw, 2.75rem);
   --lh-body: 1.6;
 
   /* Spacing (skala 4px) */
