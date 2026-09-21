@@ -21,11 +21,6 @@ def index():
   return render_template("index.html")
 
 
-@main_bp.route("/tentang")
-def tentang():
-  return render_template("tentang.html")
-
-
 @main_bp.route("/sisipkan", methods=["GET", "POST"])
 def sisipkan():
   if request.method == "GET":

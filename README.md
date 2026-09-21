@@ -36,7 +36,7 @@ app/
   metrics/     modul penghitungan MSE, PSNR, kategori kualitas
   stego/       modul pembentukan payload & penyisipan/ekstraksi LSB
   static/      CSS & JavaScript
-  templates/   halaman Jinja2 (beranda, sisipkan, ekstraksi, hasil, tentang)
+  templates/   halaman Jinja2 (beranda, sisipkan, ekstraksi, hasil)
   routes.py    endpoint Flask (menghubungkan semua modul di atas)
   __init__.py  application factory
 tests/         unit test untuk tiap modul (pytest)

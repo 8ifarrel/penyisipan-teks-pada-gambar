@@ -29,14 +29,13 @@
   5. Header & navigasi (termasuk hamburger menu mobile)
   6. Tipografi halaman (page-header, hero, ilustrasi hero)
   7. Card / panel (garis tepi tipis)
-  8. Halaman Tentang (langkah cara kerja & catatan keamanan)
-  9. Form (field, input, textarea, dropzone unggah, input berikon)
-  10. Tombol (sudut tegas)
-  11. Hasil (preview citra, badge kualitas, info developer)
-  12. Flash messages
-  13. Footer
-  14. Breakpoint tablet (min-width: 640px)
-  15. Breakpoint desktop (min-width: 1024px)
+  8. Form (field, input, textarea, dropzone unggah, input berikon)
+  9. Tombol (sudut tegas)
+  10. Hasil (preview citra, badge kualitas, info developer)
+  11. Flash messages
+  12. Footer
+  13. Breakpoint tablet (min-width: 640px)
+  14. Breakpoint desktop (min-width: 1024px)
  ============================================================================ */
 
 /* 1. Custom properties (design tokens) -------------------------------------- */
@@ -406,70 +405,7 @@ h3 {
   margin-top: var(--space-4);
 }
 
-/* 8. Halaman Tentang (langkah cara kerja & catatan keamanan) --------------------------- */
-
-.about-steps {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-.about-steps li {
-  display: flex;
-  gap: var(--space-3);
-  align-items: baseline;
-}
-
-.about-steps__marker {
-  flex: 0 0 auto;
-  font-family: var(--font-mono);
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  color: var(--color-accent);
-}
-
-.about-steps li div {
-  color: var(--color-text-muted);
-  line-height: 1.65;
-}
-
-.about-steps li strong {
-  color: var(--color-text);
-}
-
-.about-notes {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-.about-notes li {
-  display: flex;
-  gap: var(--space-3);
-  align-items: flex-start;
-  color: var(--color-text-muted);
-  line-height: 1.65;
-}
-
-.about-notes .icon {
-  flex: 0 0 auto;
-  width: 1.3rem;
-  height: 1.3rem;
-  color: var(--color-accent);
-  margin-top: 0.15em;
-}
-
-.about-notes strong {
-  color: var(--color-text);
-}
-
-/* 9. Form (label mono utk field, tetap sans utk hint) ------------------------------------ */
+/* 8. Form (label mono utk field, tetap sans utk hint) ------------------------------------ */
 
 .form-field {
   max-width: var(--content-max);
@@ -633,7 +569,7 @@ textarea.key-display {
   color: var(--color-accent);
 }
 
-/* 10. Tombol (sudut tegas, huruf kapital ala perintah CLI) ------------------------------- */
+/* 9. Tombol (sudut tegas, huruf kapital ala perintah CLI) ------------------------------- */
 
 .btn {
   display: inline-flex;
@@ -715,7 +651,7 @@ textarea.key-display {
   flex: 1;
 }
 
-/* 11. Hasil: preview citra & badge kualitas --------------------------------------------- */
+/* 10. Hasil: preview citra & badge kualitas --------------------------------------------- */
 
 .image-frame {
   display: flex;
@@ -849,7 +785,7 @@ textarea.key-display {
   color: var(--color-error-text);
 }
 
-/* 12. Flash messages -------------------------------------------------------------------- */
+/* 11. Flash messages -------------------------------------------------------------------- */
 
 .flash-messages {
   max-width: var(--content-max);
@@ -879,7 +815,7 @@ textarea.key-display {
   border-left: 3px solid var(--color-success-text);
 }
 
-/* 13. Footer ------------------------------------------------------------------------------ */
+/* 12. Footer ------------------------------------------------------------------------------ */
 
 .site-footer {
   padding-block: var(--space-4);
@@ -892,7 +828,7 @@ textarea.key-display {
   text-align: center;
 }
 
-/* 14. Breakpoint tablet (min-width: 640px) ------------------------------------------------- */
+/* 13. Breakpoint tablet (min-width: 640px) ------------------------------------------------- */
 
 @media (min-width: 640px) {
   .nav-toggle {
@@ -942,7 +878,7 @@ textarea.key-display {
   }
 }
 
-/* 15. Breakpoint desktop (min-width: 1024px) ------------------------------------------------ */
+/* 14. Breakpoint desktop (min-width: 1024px) ------------------------------------------------ */
 
 @media (min-width: 1024px) {
   .container {
