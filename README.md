@@ -2,7 +2,7 @@
 
 Aplikasi web steganografi yang menyisipkan teks rahasia ke dalam citra digital. Teks dienkripsi terlebih dahulu dengan **AES-128-GCM**, lalu payload hasil enkripsinya disisipkan ke citra menggunakan metode **Least Significant Bit (LSB)**.
 
-Aplikasi ini dibuat sebagai bagian dari penelitian skripsi berjudul "Model Advanced Encryption Standard dan Least Significant Bit untuk Menerapkan Penyisipan Teks pada Gambar" oleh Farrel Sirah (NIM 2209106138) dari Program Studi S-1 Informatika Universitas Mulawarman.
+Aplikasi ini dibuat sebagai bagian dari penelitian skripsi berjudul "Model Advanced Encryption Standard dan Least Significant Bit untuk Menerapkan Penyisipan Teks pada Gambar" oleh Muhammad Farrel Sirah (NIM 2209106138) dari Program Studi S-1 Informatika Universitas Mulawarman.
 
 ## Fitur
 
