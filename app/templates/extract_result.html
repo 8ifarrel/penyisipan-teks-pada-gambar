@@ -12,14 +12,17 @@
   <div class="card">
     <h2>Foto Stego</h2>
     <div class="image-frame">
-      <img class="result-image" src="{{ preview_data_uri }}" alt="Citra stego yang diunggah">
+      <img class="result-image" src="{{ preview_data_uri }}"
+        alt="Citra stego yang diunggah">
     </div>
   </div>
 
   <div class="card">
     <h2>Teks</h2>
-    <textarea id="extracted-text" class="key-display" readonly>{{ plaintext }}</textarea>
-    <button type="button" class="btn btn-secondary" data-copy-target="#extracted-text">
+    <textarea id="extracted-text" class="key-display"
+      readonly>{{ plaintext }}</textarea>
+    <button type="button" class="btn btn-secondary"
+      data-copy-target="#extracted-text">
       <span class="btn__icon">{{ icon_copy() }}</span>
       <span class="btn__label">Salin Teks</span>
     </button>

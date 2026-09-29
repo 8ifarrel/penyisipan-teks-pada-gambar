@@ -13,13 +13,17 @@
  enkripsi/penyisipan/ekstraksi/dekripsi, PSNR, ukuran citra stego) tidak
  diberi id, tetap "-" sampai form disubmit.
 
- _dev_value() menampilkan tiap nilai lengkap dengan tombol salin (ikon saja).
+ _dev_value() menampilkan tiap nilai lengkap dengan tombol salin (ikon
+ saja).
  Nilai yang berformat "A (B)" (hasil format_size() di
  app/utils/formatting.py, mis. "12,300 KB (12.300 B)") dipecah jadi dua
  bagian yang masing-masing punya tombol salin sendiri. #}
 
 {% macro _dev_copy_btn(value) %}
-<button type="button" class="dev-info__copy" data-copy-value="{{ value }}" title="Salin {{ value }}" aria-label="Salin {{ value }}">{{ icon_copy() }}</button>
+<button type="button" class="dev-info__copy" data-copy-value="{{ value }}"
+  title="Salin {{ value }}" aria-label="Salin {{ value }}">
+  {{- icon_copy() -}}
+</button>
 {% endmacro %}
 
 {% macro _dev_value(text) %}
@@ -28,7 +32,8 @@
 {%- elif " (" in text and text.endswith(")") -%}
 {%- set primary = text.split(" (")[0] -%}
 {%- set secondary = text[(primary | length) + 2 : -1] -%}
-{{ primary }}{{ _dev_copy_btn(primary) }} ({{ secondary }}{{ _dev_copy_btn(secondary) }})
+{{ primary }}{{ _dev_copy_btn(primary) }} ({{ secondary -}}
+{{ _dev_copy_btn(secondary) }})
 {%- else -%}
 {{ text }}{{ _dev_copy_btn(text) }}
 {%- endif -%}
@@ -39,7 +44,9 @@
   <summary>Info Developer</summary>
   <dl class="dev-info__list">
     <dt>Dimensi Citra Cover</dt>
-    <dd id="dev-cover-dimensions">{{ _dev_value(dev_info.cover_dimensions) }}</dd>
+    <dd id="dev-cover-dimensions">
+      {{- _dev_value(dev_info.cover_dimensions) -}}
+    </dd>
     <dt>Ukuran Citra Cover</dt>
     <dd id="dev-cover-size">{{ _dev_value(dev_info.cover_size) }}</dd>
     <dt>Ukuran Teks Asli</dt>
@@ -49,7 +56,9 @@
     <dt>Kapasitas Citra</dt>
     <dd id="dev-capacity-bits">{{ _dev_value(dev_info.capacity_bits) }}</dd>
     <dt>Status Kapasitas</dt>
-    <dd id="dev-capacity-status">{{ _dev_value(dev_info.capacity_status) }}</dd>
+    <dd id="dev-capacity-status">
+      {{- _dev_value(dev_info.capacity_status) -}}
+    </dd>
     <dt>Status Enkripsi</dt>
     <dd>{{ _dev_value(dev_info.encryption_status) }}</dd>
     <dt>Status Penyisipan</dt>
@@ -69,7 +78,9 @@
   <summary>Info Developer</summary>
   <dl class="dev-info__list">
     <dt>Dimensi Citra Stego</dt>
-    <dd id="dev-stego-dimensions">{{ _dev_value(dev_info.stego_dimensions) }}</dd>
+    <dd id="dev-stego-dimensions">
+      {{- _dev_value(dev_info.stego_dimensions) -}}
+    </dd>
     <dt>Ukuran Citra Stego</dt>
     <dd id="dev-stego-size">{{ _dev_value(dev_info.stego_size) }}</dd>
     <dt>Ukuran Payload</dt>

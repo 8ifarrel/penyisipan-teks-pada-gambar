@@ -13,12 +13,15 @@ def create_app():
   app = Flask(__name__)
 
   # TODO: pindahkan ke config terpisah jika diperlukan (mis. app/config.py)
-  app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # batas ukuran unggahan
+  # batas ukuran unggahan
+  app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 
   # Dipakai Flask untuk menandatangani session cookie flash message.
   # Diambil dari environment variable jika tersedia, jika tidak dibangkitkan
   # acak setiap kali proses dijalankan.
-  app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
+  app.config["SECRET_KEY"] = (
+    os.environ.get("SECRET_KEY") or secrets.token_hex(32)
+  )
 
   os.makedirs(app.instance_path, exist_ok=True)
 

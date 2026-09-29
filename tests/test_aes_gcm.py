@@ -3,7 +3,8 @@
 # Mencakup:
 #   (a) round-trip enkripsi-dekripsi menghasilkan teks yang sama persis
 #   (b) dekripsi dengan authentication tag yang salah gagal dengan benar
-#   (c) panjang key dan nonce yang dihasilkan selalu benar (16 byte, 12 byte)
+#   (c) panjang key dan nonce yang dihasilkan selalu benar (16 byte,
+#       12 byte)
 
 import pytest
 
@@ -61,7 +62,8 @@ class TestEncryptText:
     assert len(result["key"]) == KEY_LEN_BYTES
     assert len(result["nonce"]) == NONCE_LEN_BYTES
     assert len(result["tag"]) == TAG_LEN_BYTES
-    # ciphertext (AES-GCM adalah stream cipher) panjangnya = panjang plaintext (bytes)
+    # ciphertext (AES-GCM adalah stream cipher) panjangnya = panjang
+    # plaintext (bytes)
     assert len(result["ciphertext"]) == len(plaintext.encode("utf-8"))
 
   def test_ciphertext_does_not_contain_tag_appended(self):
@@ -75,7 +77,8 @@ class TestEncryptText:
 
     assert result_a["key"] != result_b["key"]
     assert result_a["nonce"] != result_b["nonce"]
-    # Ciphertext & tag pun berbeda walau plaintext sama, karena key/nonce beda.
+    # Ciphertext & tag pun berbeda walau plaintext sama, karena key/nonce
+    # beda.
     assert result_a["ciphertext"] != result_b["ciphertext"]
     assert result_a["tag"] != result_b["tag"]
 
@@ -112,7 +115,9 @@ class TestAuthenticationFailure:
     encrypted = self._encrypt_sample()
 
     # Rusak satu byte pertama pada tag agar T != T'
-    corrupted_tag = bytes([encrypted["tag"][0] ^ 0xFF]) + encrypted["tag"][1:]
+    corrupted_tag = (
+      bytes([encrypted["tag"][0] ^ 0xFF]) + encrypted["tag"][1:]
+    )
 
     with pytest.raises(AuthenticationError):
       decrypt_ciphertext(
@@ -149,7 +154,8 @@ class TestAuthenticationFailure:
   def test_tampered_ciphertext_raises_authentication_error(self):
     encrypted = self._encrypt_sample()
     tampered_ciphertext = (
-      bytes([encrypted["ciphertext"][0] ^ 0xFF]) + encrypted["ciphertext"][1:]
+      bytes([encrypted["ciphertext"][0] ^ 0xFF])
+      + encrypted["ciphertext"][1:]
     )
 
     with pytest.raises(AuthenticationError):
@@ -162,7 +168,9 @@ class TestAuthenticationFailure:
 
   def test_authentication_error_message_mentions_tag_mismatch(self):
     encrypted = self._encrypt_sample()
-    corrupted_tag = bytes([encrypted["tag"][0] ^ 0xFF]) + encrypted["tag"][1:]
+    corrupted_tag = (
+      bytes([encrypted["tag"][0] ^ 0xFF]) + encrypted["tag"][1:]
+    )
 
     with pytest.raises(AuthenticationError, match="Authentication tag"):
       decrypt_ciphertext(

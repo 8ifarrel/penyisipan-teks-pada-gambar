@@ -10,11 +10,13 @@ document.addEventListener("DOMContentLoaded", function () {
   initDevInfoLive();
 });
 
-// --- Tombol "Salin" (kunci AES / teks hasil ekstraksi) ---------------------
+// --- Tombol "Salin" (kunci AES / teks hasil ekstraksi) -------------------
 
 function initCopyButtons() {
   document.addEventListener("click", function (event) {
-    const button = event.target.closest("[data-copy-target], [data-copy-value]");
+    const button = event.target.closest(
+      "[data-copy-target], [data-copy-value]"
+    );
     if (!button) {
       return;
     }
@@ -31,14 +33,18 @@ function initCopyButtons() {
     if (isIconOnly) {
       text = button.getAttribute("data-copy-value") || "";
     } else {
-      target = document.querySelector(button.getAttribute("data-copy-target"));
+      target = document.querySelector(
+        button.getAttribute("data-copy-target")
+      );
       if (!target) {
         return;
       }
       text = "value" in target ? target.value : target.textContent;
     }
 
-    const labelEl = isIconOnly ? null : button.querySelector(".btn__label") || button;
+    const labelEl = isIconOnly
+      ? null
+      : button.querySelector(".btn__label") || button;
     const originalLabel = labelEl ? labelEl.textContent : null;
 
     const showFeedback = function (success) {
@@ -46,7 +52,10 @@ function initCopyButtons() {
         button.classList.toggle("dev-info__copy--success", success);
         button.classList.toggle("dev-info__copy--error", !success);
         setTimeout(function () {
-          button.classList.remove("dev-info__copy--success", "dev-info__copy--error");
+          button.classList.remove(
+            "dev-info__copy--success",
+            "dev-info__copy--error"
+          );
         }, 1200);
         return;
       }
@@ -59,7 +68,8 @@ function initCopyButtons() {
     };
 
     const fallbackCopy = function () {
-      // Fallback bila Clipboard API tidak tersedia (mis. konteks non-HTTPS).
+      // Fallback bila Clipboard API tidak tersedia (mis. konteks
+      // non-HTTPS).
       if (target && target.select) {
         target.select();
         try {
@@ -98,7 +108,7 @@ function initCopyButtons() {
   });
 }
 
-// --- Menu navigasi (hamburger di mobile) ------------------------------------
+// --- Menu navigasi (hamburger di mobile) ---------------------------------
 
 function initNavToggle() {
   const toggle = document.getElementById("nav-toggle");
@@ -123,7 +133,7 @@ function initNavToggle() {
   });
 }
 
-// --- Area unggah drag-and-drop -----------------------------------------------
+// --- Area unggah drag-and-drop -------------------------------------------
 //
 // Elemen <input type="file"> pada .dropzone sengaja tetap ada dan berfungsi
 // penuh (diposisikan menutupi seluruh area lewat CSS). Drag-and-drop file
@@ -172,7 +182,7 @@ function initDropzones() {
   });
 }
 
-// --- Panel "Info Developer": info langsung sebelum form disubmit -----------
+// --- Panel "Info Developer": info langsung sebelum form disubmit ---------
 //
 // Sebagian field pada panel Info Developer (ukuran & dimensi foto, ukuran
 // teks, perkiraan ukuran payload, kapasitas citra) dihitung di sisi klien
@@ -180,18 +190,21 @@ function initDropzones() {
 // disubmit ke server. Elemen dengan id="dev-..." di _dev_info.html adalah
 // target pembaruannya.
 
-// Overhead payload tetap: header (4 byte) + nonce (12 byte) + authentication
-// tag (16 byte) AES-GCM, mengikuti struktur payload pada app/stego/payload.py.
+// Overhead payload tetap: header (4 byte) + nonce (12 byte) +
+// authentication tag (16 byte) AES-GCM, mengikuti struktur payload pada
+// app/stego/payload.py.
 const DEV_INFO_PAYLOAD_OVERHEAD_BYTES = 32;
 
-// SVG identik dengan macro icon_copy() di _icons.html, dipakai ulang di sini
-// karena tombol salin pada field yang diperbarui live dibuat lewat JS
+// SVG identik dengan macro icon_copy() di _icons.html, dipakai ulang di
+// sini karena tombol salin pada field yang diperbarui live dibuat lewat JS
 // (innerHTML), bukan dirender Jinja.
 const DEV_INFO_COPY_ICON_SVG =
-  '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
-  'stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" ' +
-  'aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" />' +
-  '<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>';
+  '<svg class="icon" viewBox="0 0 24 24" fill="none" ' +
+  'stroke="currentColor" stroke-width="1.75" stroke-linecap="round" ' +
+  'stroke-linejoin="round" aria-hidden="true">' +
+  '<rect x="9" y="9" width="11" height="11" rx="2" />' +
+  '<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />' +
+  "</svg>";
 
 function escapeHtml(str) {
   return String(str)
@@ -227,8 +240,10 @@ function formatSizeLive(numBytes) {
 function devCopyButtonHtml(value) {
   const escaped = escapeHtml(value);
   return (
-    `<button type="button" class="dev-info__copy" data-copy-value="${escaped}" ` +
-    `title="Salin ${escaped}" aria-label="Salin ${escaped}">${DEV_INFO_COPY_ICON_SVG}</button>`
+    `<button type="button" class="dev-info__copy" ` +
+    `data-copy-value="${escaped}" ` +
+    `title="Salin ${escaped}" aria-label="Salin ${escaped}">` +
+    `${DEV_INFO_COPY_ICON_SVG}</button>`
   );
 }
 
@@ -291,14 +306,17 @@ function initEmbedDevInfoLive() {
     const img = new Image();
     img.onload = function () {
       dimEl.innerHTML = renderDevValue(
-        `${formatIdInt(img.naturalWidth)} × ${formatIdInt(img.naturalHeight)} piksel`
+        `${formatIdInt(img.naturalWidth)} × ` +
+        `${formatIdInt(img.naturalHeight)} piksel`
       );
       capacityBits = img.naturalWidth * img.naturalHeight * 3;
       if (capacityEl) {
         // Kapasitas ditampilkan dalam satuan KB (B), sama seperti ukuran
         // berkas lain, bukan bit, supaya konsisten dengan sisi server
         // (lihat format_size(capacity_bits // 8) di embed_service.py).
-        capacityEl.innerHTML = renderDevValue(formatSizeLive(Math.floor(capacityBits / 8)));
+        capacityEl.innerHTML = renderDevValue(
+          formatSizeLive(Math.floor(capacityBits / 8))
+        );
       }
       updateCapacityStatus();
       URL.revokeObjectURL(objectUrl);
@@ -343,7 +361,8 @@ function initExtractDevInfoLive() {
     const img = new Image();
     img.onload = function () {
       dimEl.innerHTML = renderDevValue(
-        `${formatIdInt(img.naturalWidth)} × ${formatIdInt(img.naturalHeight)} piksel`
+        `${formatIdInt(img.naturalWidth)} × ` +
+        `${formatIdInt(img.naturalHeight)} piksel`
       );
       URL.revokeObjectURL(objectUrl);
     };

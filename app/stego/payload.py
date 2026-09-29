@@ -43,7 +43,8 @@ def build_payload(nonce: bytes, tag: bytes, ciphertext: bytes) -> bytes:
   """
   if len(nonce) != NONCE_LEN_BYTES:
     raise ValueError(
-      f"Panjang nonce harus {NONCE_LEN_BYTES} byte, diterima {len(nonce)} byte."
+      f"Panjang nonce harus {NONCE_LEN_BYTES} byte, "
+      f"diterima {len(nonce)} byte."
     )
   if len(tag) != TAG_LEN_BYTES:
     raise ValueError(
@@ -51,7 +52,9 @@ def build_payload(nonce: bytes, tag: bytes, ciphertext: bytes) -> bytes:
       f"diterima {len(tag)} byte."
     )
 
-  payload_length = HEADER_LEN_BYTES + NONCE_LEN_BYTES + TAG_LEN_BYTES + len(ciphertext)
+  payload_length = (
+    HEADER_LEN_BYTES + NONCE_LEN_BYTES + TAG_LEN_BYTES + len(ciphertext)
+  )
   header = struct.pack(HEADER_STRUCT_FORMAT, payload_length)
 
   return header + nonce + tag + ciphertext
@@ -59,7 +62,8 @@ def build_payload(nonce: bytes, tag: bytes, ciphertext: bytes) -> bytes:
 
 def parse_payload(payload: bytes) -> dict:
   """
-  Memisahkan payload menjadi komponen nonce, authentication tag, dan ciphertext.
+  Memisahkan payload menjadi komponen nonce, authentication tag, dan
+  ciphertext.
 
   Alur:
    1. Baca 4 byte pertama sebagai header -> panjang total payload
@@ -93,7 +97,8 @@ def parse_payload(payload: bytes) -> dict:
   if payload_length != len(payload):
     raise ValueError(
       f"Panjang payload pada header ({payload_length} byte) tidak "
-      f"sesuai dengan panjang byte payload yang diberikan ({len(payload)} byte)."
+      f"sesuai dengan panjang byte payload yang diberikan "
+      f"({len(payload)} byte)."
     )
 
   nonce_start = HEADER_LEN_BYTES

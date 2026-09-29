@@ -1,10 +1,10 @@
 # Penyimpanan sementara citra stego di disk.
 #
 # Citra STEGO hasil penyisipan disimpan sebagai file PNG di folder temporer
-# (`<instance_path>/tmp_stego/`) dengan nama acak (UUID4) agar bisa disajikan
-# kembali lewat route pratinjau & unduh pada halaman hasil (butuh permintaan
-# GET terpisah untuk <img> dan tombol unduh, sehingga tidak cukup hanya
-# disimpan di memori selama satu request POST saja).
+# (`<instance_path>/tmp_stego/`) dengan nama acak (UUID4) agar bisa
+# disajikan kembali lewat route pratinjau & unduh pada halaman hasil (butuh
+# permintaan GET terpisah untuk <img> dan tombol unduh, sehingga tidak
+# cukup hanya disimpan di memori selama satu request POST saja).
 #
 # Karena aplikasi ini tidak menjalankan scheduler/cron di latar belakang,
 # file temporer dibersihkan secara "lazy": setiap kali route yang berpotensi

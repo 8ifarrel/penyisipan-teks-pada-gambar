@@ -6,7 +6,11 @@ import os
 from flask import current_app, flash, render_template, request
 
 from app.crypto.aes_gcm import encrypt_text
-from app.metrics.quality import calculate_mse, calculate_psnr, categorize_quality
+from app.metrics.quality import (
+  calculate_mse,
+  calculate_psnr,
+  categorize_quality,
+)
 from app.stego.lsb import (
   ImageValidationError,
   calculate_capacity,
@@ -15,8 +19,16 @@ from app.stego.lsb import (
 )
 from app.stego.payload import build_payload
 from app.utils.dev_info import empty_dev_info
-from app.utils.formatting import format_id_decimal, format_id_int, format_size
-from app.utils.temp_files import cleanup_old_temp_files, save_stego_image, temp_dir
+from app.utils.formatting import (
+  format_id_decimal,
+  format_id_int,
+  format_size,
+)
+from app.utils.temp_files import (
+  cleanup_old_temp_files,
+  save_stego_image,
+  temp_dir,
+)
 from app.utils.uploads import file_size_bytes, open_uploaded_image
 
 # Daftar field "Info Developer" untuk halaman Sisipkan. Diisi progresif di
@@ -76,7 +88,9 @@ def handle_submit():
 
   width, height = cover_image.size
   if dev_info is not None:
-    dev_info["cover_dimensions"] = f"{format_id_int(width)} × {format_id_int(height)} piksel"
+    dev_info["cover_dimensions"] = (
+      f"{format_id_int(width)} × {format_id_int(height)} piksel"
+    )
 
   # 2. Validasi format PNG & model warna RGB 24-bit
   try:
@@ -91,7 +105,9 @@ def handle_submit():
     dev_info["encryption_status"] = "Berhasil"
 
   # 4. Bentuk payload
-  payload = build_payload(encrypted["nonce"], encrypted["tag"], encrypted["ciphertext"])
+  payload = build_payload(
+    encrypted["nonce"], encrypted["tag"], encrypted["ciphertext"]
+  )
   if dev_info is not None:
     dev_info["payload_size"] = format_size(len(payload))
 
@@ -99,7 +115,8 @@ def handle_submit():
   capacity_bits = calculate_capacity(width, height)
   payload_bits_len = len(payload) * 8
   if dev_info is not None:
-    # Ditampilkan dalam satuan KB (B), sama seperti field ukuran berkas lain.
+    # Ditampilkan dalam satuan KB (B), sama seperti field ukuran berkas
+    # lain.
     dev_info["capacity_bits"] = format_size(capacity_bits // 8)
 
   if capacity_bits < payload_bits_len:

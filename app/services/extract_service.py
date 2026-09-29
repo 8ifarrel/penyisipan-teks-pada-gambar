@@ -6,7 +6,11 @@ import io
 
 from flask import current_app, flash, render_template, request
 
-from app.crypto.aes_gcm import KEY_LEN_BYTES, AuthenticationError, decrypt_ciphertext
+from app.crypto.aes_gcm import (
+  KEY_LEN_BYTES,
+  AuthenticationError,
+  decrypt_ciphertext,
+)
 from app.stego.lsb import (
   CapacityError,
   ImageValidationError,
@@ -134,7 +138,10 @@ def handle_submit():
   except AuthenticationError:
     if dev_info is not None:
       dev_info["decryption_status"] = "Gagal"
-    flash("Ekstraksi gagal: kunci AES salah atau data pada citra rusak.", "error")
+    flash(
+      "Ekstraksi gagal: kunci AES salah atau data pada citra rusak.",
+      "error",
+    )
     return render_template("extract.html", dev_info=dev_info), 400
 
   if dev_info is not None:
@@ -145,9 +152,8 @@ def handle_submit():
   # teks hasil dekripsi.
   buffer = io.BytesIO()
   save_png(stego_image, buffer)
-  preview_data_uri = "data:image/png;base64," + base64.b64encode(buffer.getvalue()).decode(
-    "ascii"
-  )
+  encoded = base64.b64encode(buffer.getvalue()).decode("ascii")
+  preview_data_uri = "data:image/png;base64," + encoded
 
   return render_template(
     "extract_result.html",

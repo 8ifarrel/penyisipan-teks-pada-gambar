@@ -28,7 +28,8 @@ def open_uploaded_image(file_storage):
     raw_bytes = file_storage.stream.read()
     file_storage.stream.seek(0)
     image = Image.open(io.BytesIO(raw_bytes))
-    image.load()  # paksa dekode penuh sekarang agar berkas rusak terdeteksi di sini
+    # paksa dekode penuh sekarang agar berkas rusak terdeteksi di sini
+    image.load()
     remember_source_compression_profile(image, raw_bytes)
     return image
   except (UnidentifiedImageError, OSError):

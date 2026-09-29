@@ -6,7 +6,8 @@
 #   - Auth tag  : 128 bit (16 byte)
 #   - Encoding  : UTF-8
 #
-# Library yang digunakan: `cryptography` (cryptography.hazmat.primitives.ciphers.aead.AESGCM)
+# Library yang digunakan: `cryptography`
+# (cryptography.hazmat.primitives.ciphers.aead.AESGCM)
 #
 # Ciphertext dan authentication tag pada modul ini selalu berupa dua nilai
 # bytes terpisah (bukan tergabung di akhir buffer seperti keluaran default
@@ -101,7 +102,9 @@ def encrypt_text(plaintext: str) -> dict:
   }
 
 
-def decrypt_ciphertext(key: bytes, nonce: bytes, tag: bytes, ciphertext: bytes) -> str:
+def decrypt_ciphertext(
+  key: bytes, nonce: bytes, tag: bytes, ciphertext: bytes
+) -> str:
   """
   Mendekripsi ciphertext dengan AES-128-GCM.
 

@@ -11,7 +11,10 @@
 from flask import Blueprint, render_template, request, send_file
 
 from app.services import embed_service, extract_service
-from app.utils.temp_files import cleanup_old_temp_files, resolve_temp_file_path
+from app.utils.temp_files import (
+  cleanup_old_temp_files,
+  resolve_temp_file_path,
+)
 
 main_bp = Blueprint("main", __name__)
 
@@ -30,7 +33,10 @@ def sisipkan():
 
 @main_bp.route("/pratinjau/<file_id>")
 def pratinjau_stego(file_id):
-  """Menyajikan citra stego untuk ditampilkan (bukan diunduh) di halaman hasil."""
+  """
+  Menyajikan citra stego untuk ditampilkan (bukan diunduh) di halaman
+  hasil.
+  """
   cleanup_old_temp_files()
   file_path = resolve_temp_file_path(file_id)
   return send_file(file_path, mimetype="image/png")
@@ -38,7 +44,10 @@ def pratinjau_stego(file_id):
 
 @main_bp.route("/unduh/<file_id>")
 def unduh_stego(file_id):
-  """Menyajikan citra stego sebagai unduhan (Content-Disposition: attachment)."""
+  """
+  Menyajikan citra stego sebagai unduhan (Content-Disposition:
+  attachment).
+  """
   cleanup_old_temp_files()
   file_path = resolve_temp_file_path(file_id)
   return send_file(

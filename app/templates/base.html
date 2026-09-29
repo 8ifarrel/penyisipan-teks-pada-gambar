@@ -3,32 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Beranda{% endblock %} - Penyisipan Teks pada Gambar</title>
+  <title>
+    {%- block title %}Beranda{% endblock %} - Penyisipan Teks pada Gambar
+  </title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% set google_fonts_url = "https://fonts.googleapis.com/css2"
+    ~ "?family=JetBrains+Mono:wght@400;500;600;700"
+    ~ "&family=IBM+Plex+Sans:wght@400;500;600;700"
+    ~ "&display=swap" %}
+  <link rel="stylesheet" href="{{ google_fonts_url | safe }}">
+  <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
   {% from "_icons.html" import icon_menu, icon_close %}
 
   <header class="site-header">
     <div class="container site-header__inner">
-      <a class="brand" href="{{ url_for('main.index') }}">Penyisipan Teks pada Gambar</a>
+      <a class="brand"
+        href="{{ url_for('main.index') }}">Penyisipan Teks pada Gambar</a>
 
-      <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav">
-        <span class="nav-toggle__icon nav-toggle__icon--open">{{ icon_menu() }}</span>
-        <span class="nav-toggle__icon nav-toggle__icon--close">{{ icon_close() }}</span>
+      <button type="button" class="nav-toggle" id="nav-toggle"
+        aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle__icon nav-toggle__icon--open">
+          {{- icon_menu() -}}
+        </span>
+        <span class="nav-toggle__icon nav-toggle__icon--close">
+          {{- icon_close() -}}
+        </span>
         <span class="visually-hidden">Buka menu navigasi</span>
       </button>
 
       <nav class="nav" id="site-nav">
         <a href="{{ url_for('main.index') }}"
-         class="nav__link{% if request.endpoint == 'main.index' %} nav__link--active{% endif %}">Beranda</a>
+         class="nav__link
+           {%- if request.endpoint == 'main.index' %} nav__link--active
+           {%- endif %}">Beranda</a>
         <a href="{{ url_for('main.sisipkan') }}"
-         class="nav__link{% if request.endpoint == 'main.sisipkan' %} nav__link--active{% endif %}">Sisipkan Teks</a>
+         class="nav__link
+           {%- if request.endpoint == 'main.sisipkan' %} nav__link--active
+           {%- endif %}">Sisipkan Teks</a>
         <a href="{{ url_for('main.ekstraksi') }}"
-         class="nav__link{% if request.endpoint == 'main.ekstraksi' %} nav__link--active{% endif %}">Ekstraksi Teks</a>
+         class="nav__link
+           {%- if request.endpoint == 'main.ekstraksi' %} nav__link--active
+           {%- endif %}">Ekstraksi Teks</a>
       </nav>
     </div>
   </header>
@@ -49,7 +68,10 @@
 
   <footer class="site-footer">
     <div class="container">
-      <p>Model Advanced Encryption Standard dan Least Significant Bit untuk Menerapkan Penyisipan Teks pada Gambar.</p>
+      <p>
+        Model Advanced Encryption Standard dan Least Significant Bit untuk
+        Menerapkan Penyisipan Teks pada Gambar.
+      </p>
     </div>
   </footer>
 

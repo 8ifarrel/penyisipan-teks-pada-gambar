@@ -112,9 +112,11 @@ class TestCategorizeQuality:
       (0.0, "Kualitas citra stego menurun drastis"),
       (10.0, "Kualitas citra stego menurun drastis"),
       (19.999, "Kualitas citra stego menurun drastis"),
-      (20.0, "Kualitas citra stego masih bisa diterima"),  # batas bawah, inklusif
+      # batas bawah, inklusif
+      (20.0, "Kualitas citra stego masih bisa diterima"),
       (25.0, "Kualitas citra stego masih bisa diterima"),
-      (30.0, "Kualitas citra stego masih bisa diterima"),  # batas atas, inklusif
+      # batas atas, inklusif
+      (30.0, "Kualitas citra stego masih bisa diterima"),
       (30.0001, "Kualitas citra stego baik"),
       (35.0, "Kualitas citra stego baik"),
       (float("inf"), "Kualitas citra stego baik"),  # citra identik sempurna
@@ -125,8 +127,10 @@ class TestCategorizeQuality:
 
 
 class TestEndToEnd:
-  def test_identical_images_are_categorized_as_good_with_infinite_psnr(self):
-    array = np.random.default_rng(0).integers(0, 256, size=(16, 16, 3), dtype=np.uint8)
+  def test_identical_images_are_good_with_infinite_psnr(self):
+    array = np.random.default_rng(0).integers(
+      0, 256, size=(16, 16, 3), dtype=np.uint8
+    )
     cover = _image_from_array(array)
     stego = _image_from_array(array.copy())
 

@@ -1,8 +1,10 @@
-# Unit test untuk modul app.stego.lsb (penyisipan & ekstraksi payload dengan LSB).
+# Unit test untuk modul app.stego.lsb (penyisipan & ekstraksi payload
+# dengan LSB).
 #
 # Mencakup:
-#   - round-trip penyisipan lalu ekstraksi mengembalikan payload yang identik
-#     (diuji end-to-end dengan payload sungguhan hasil AES-GCM + build_payload)
+#   - round-trip penyisipan lalu ekstraksi mengembalikan payload yang
+#     identik (diuji end-to-end dengan payload sungguhan hasil AES-GCM +
+#     build_payload)
 #   - exception muncul dengan benar saat kapasitas citra kurang
 #   - exception muncul dengan benar saat citra bukan PNG/RGB 24-bit
 
@@ -23,7 +25,9 @@ from app.stego.lsb import (
 from app.stego.payload import build_payload, parse_payload
 
 
-def _make_png_image(width: int, height: int, mode: str = "RGB", seed: int = 0) -> Image.Image:
+def _make_png_image(
+  width: int, height: int, mode: str = "RGB", seed: int = 0
+) -> Image.Image:
   """
   Membuat citra PNG RGB (atau mode lain) acak, lalu disimpan dan dibuka
   kembali sebagai PNG (melalui buffer BytesIO) agar atribut `.format`
@@ -32,7 +36,9 @@ def _make_png_image(width: int, height: int, mode: str = "RGB", seed: int = 0) -
   """
   rng = np.random.default_rng(seed)
   channels = len(mode) if mode != "P" else 1
-  array = rng.integers(0, 256, size=(height, width, channels), dtype=np.uint8)
+  array = rng.integers(
+    0, 256, size=(height, width, channels), dtype=np.uint8
+  )
   if channels == 1:
     array = array.squeeze(-1)
   image = Image.fromarray(array, mode=mode)
@@ -54,9 +60,13 @@ def _make_jpeg_image(width: int, height: int, seed: int = 0) -> Image.Image:
   return Image.open(buffer)
 
 
-def _real_payload(plaintext: str = "pesan rahasia untuk pengujian LSB") -> bytes:
+def _real_payload(
+  plaintext: str = "pesan rahasia untuk pengujian LSB",
+) -> bytes:
   encrypted = encrypt_text(plaintext)
-  return build_payload(encrypted["nonce"], encrypted["tag"], encrypted["ciphertext"])
+  return build_payload(
+    encrypted["nonce"], encrypted["tag"], encrypted["ciphertext"]
+  )
 
 
 class TestCalculateCapacity:
@@ -89,9 +99,14 @@ class TestEmbedExtractRoundTrip:
   def test_round_trip_with_explicit_key_decrypts_correctly(self):
     from app.crypto.aes_gcm import decrypt_ciphertext
 
-    plaintext = "Teks pengujian round-trip penuh: enkripsi-sisip-ekstrak-dekripsi."
+    plaintext = (
+      "Teks pengujian round-trip penuh: "
+      "enkripsi-sisip-ekstrak-dekripsi."
+    )
     encrypted = encrypt_text(plaintext)
-    payload = build_payload(encrypted["nonce"], encrypted["tag"], encrypted["ciphertext"])
+    payload = build_payload(
+      encrypted["nonce"], encrypted["tag"], encrypted["ciphertext"]
+    )
 
     cover = _make_png_image(width=128, height=128, seed=3)
     stego = embed_payload(cover, payload)
@@ -122,8 +137,11 @@ class TestEmbedExtractRoundTrip:
     cover_array = np.array(cover, dtype=np.uint8).reshape(-1)
     stego_array = np.array(stego, dtype=np.uint8).reshape(-1)
 
-    # Setiap kanal warna paling banter berbeda 1 (hanya bit LSB yang berubah).
-    diff = np.abs(cover_array.astype(np.int16) - stego_array.astype(np.int16))
+    # Setiap kanal warna paling banter berbeda 1 (hanya bit LSB yang
+    # berubah).
+    diff = np.abs(
+      cover_array.astype(np.int16) - stego_array.astype(np.int16)
+    )
     assert np.all(diff <= 1)
 
     # Kanal yang tidak dipakai payload harus identik persis dengan cover.
@@ -135,7 +153,9 @@ class TestEmbedExtractRoundTrip:
 
 class TestCapacityError:
   def test_embed_raises_when_capacity_insufficient(self):
-    payload = _real_payload("payload yang jauh lebih panjang dari kapasitas citra kecil")
+    payload = _real_payload(
+      "payload yang jauh lebih panjang dari kapasitas citra kecil"
+    )
     # Citra 2x2 RGB -> kapasitas 2*2*3 = 12 bit = 1.5 byte, jauh di bawah
     # kebutuhan payload (header saja sudah 4 byte = 32 bit).
     tiny_cover = _make_png_image(width=2, height=2, seed=5)
@@ -144,7 +164,8 @@ class TestCapacityError:
       embed_payload(tiny_cover, payload)
 
   def test_extract_raises_when_image_too_small_for_header(self):
-    # Citra 1x1 RGB -> hanya 3 bit tersedia, tidak cukup untuk 32 bit header.
+    # Citra 1x1 RGB -> hanya 3 bit tersedia, tidak cukup untuk 32 bit
+    # header.
     tiny_image = _make_png_image(width=1, height=1, seed=6)
 
     with pytest.raises(CapacityError, match="header"):
@@ -208,7 +229,9 @@ class TestImageValidation:
       extract_payload(jpeg_image)
 
   def test_extract_raises_when_not_rgb(self):
-    grayscale_image = _make_png_image(width=64, height=64, mode="L", seed=12)
+    grayscale_image = _make_png_image(
+      width=64, height=64, mode="L", seed=12
+    )
 
     with pytest.raises(ImageValidationError, match="RGB"):
       extract_payload(grayscale_image)

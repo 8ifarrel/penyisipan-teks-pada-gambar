@@ -1,4 +1,5 @@
-# Modul penyisipan & ekstraksi payload dengan metode LSB (1-bit paling rendah).
+# Modul penyisipan & ekstraksi payload dengan metode LSB (1-bit paling
+# rendah).
 # 
 # Aturan penyisipan:
 #   - Disisipkan pada bit ke-0 tiap kanal warna (R, G, B) secara berurutan,
@@ -48,7 +49,9 @@ def validate_png_rgb24(image: Image.Image) -> None:
     )
 
 
-def calculate_capacity(width: int, height: int, channels: int = CHANNELS) -> int:
+def calculate_capacity(
+  width: int, height: int, channels: int = CHANNELS
+) -> int:
   """
   Menghitung kapasitas penyisipan maksimum suatu citra (dalam bit).
 
@@ -73,13 +76,16 @@ def embed_payload(cover_image: Image.Image, payload: bytes) -> Image.Image:
    1. Validasi format PNG & model warna RGB 24-bit
    2. Hitung kapasitas citra cover & panjang payload dalam bit
    3. Periksa kecukupan kapasitas
-   4. Baca citra cover sebagai deret kanal warna berurutan (R, G, B, R, G, B, ...)
+   4. Baca citra cover sebagai deret kanal warna berurutan
+    (R, G, B, R, G, B, ...)
    5. Ubah payload menjadi deret bit (MSB-first per byte)
-   6. Ganti bit ke-0 tiap kanal warna secara berurutan dengan tiap bit payload (k=1)
+   6. Ganti bit ke-0 tiap kanal warna secara berurutan dengan tiap bit
+    payload (k=1)
    7. Susun ulang array menjadi citra stego
 
   Args:
-    cover_image: objek PIL.Image hasil Image.open() pada file PNG RGB 24-bit.
+    cover_image: objek PIL.Image hasil Image.open() pada file PNG RGB
+      24-bit.
     payload: bytes payload (hasil app.stego.payload.build_payload).
 
   Returns:
@@ -102,7 +108,8 @@ def embed_payload(cover_image: Image.Image, payload: bytes) -> Image.Image:
     )
 
   pixel_array = np.array(cover_image, dtype=np.uint8)  # shape: (H, W, 3)
-  flat_channels = pixel_array.reshape(-1).copy()  # deret kanal R,G,B,R,G,B,...
+  # deret kanal R,G,B,R,G,B,...
+  flat_channels = pixel_array.reshape(-1).copy()
 
   # MSB-first per byte agar konsisten dengan urutan pada extract_payload().
   payload_bits = np.unpackbits(np.frombuffer(payload, dtype=np.uint8))
@@ -122,13 +129,15 @@ def extract_payload(stego_image: Image.Image) -> bytes:
   Alur:
    1. Validasi format PNG & model warna RGB 24-bit
    2. Baca citra stego sebagai deret kanal warna berurutan
-   3. Ekstraksi 32 bit LSB pertama (4 byte) -> rekonstruksi header (panjang payload)
+   3. Ekstraksi 32 bit LSB pertama (4 byte) -> rekonstruksi header
+    (panjang payload)
    4. Ekstraksi bit LSB sejumlah (panjang_payload_total x 8) bit, termasuk
     32 bit header yang sudah diambil di awal
    5. Rekonstruksi seluruh bit menjadi bytes payload lengkap
 
   Args:
-    stego_image: objek PIL.Image hasil Image.open() pada file PNG RGB 24-bit.
+    stego_image: objek PIL.Image hasil Image.open() pada file PNG RGB
+      24-bit.
 
   Returns:
     bytes payload lengkap (header + nonce + tag + ciphertext).

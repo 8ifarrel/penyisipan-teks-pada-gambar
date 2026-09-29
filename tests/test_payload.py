@@ -1,4 +1,5 @@
-# Unit test untuk modul app.stego.payload (pembentukan & pemisahan payload).
+# Unit test untuk modul app.stego.payload (pembentukan & pemisahan
+# payload).
 
 import struct
 
@@ -25,22 +26,26 @@ class TestBuildPayload:
     nonce, tag, ciphertext = _sample_components(ciphertext_len=20)
     payload = build_payload(nonce, tag, ciphertext)
 
-    expected_length = HEADER_LEN_BYTES + NONCE_LEN_BYTES + TAG_LEN_BYTES + len(ciphertext)
+    expected_length = (
+      HEADER_LEN_BYTES + NONCE_LEN_BYTES + TAG_LEN_BYTES + len(ciphertext)
+    )
     assert len(payload) == expected_length
 
     header = payload[:HEADER_LEN_BYTES]
     (header_value,) = struct.unpack(HEADER_STRUCT_FORMAT, header)
     assert header_value == expected_length
 
-    assert payload[HEADER_LEN_BYTES : HEADER_LEN_BYTES + NONCE_LEN_BYTES] == nonce
     tag_start = HEADER_LEN_BYTES + NONCE_LEN_BYTES
+    assert payload[HEADER_LEN_BYTES:tag_start] == nonce
     assert payload[tag_start : tag_start + TAG_LEN_BYTES] == tag
     assert payload[tag_start + TAG_LEN_BYTES :] == ciphertext
 
   def test_empty_ciphertext_is_allowed(self):
     nonce, tag, _ = _sample_components()
     payload = build_payload(nonce, tag, b"")
-    assert len(payload) == HEADER_LEN_BYTES + NONCE_LEN_BYTES + TAG_LEN_BYTES
+    assert len(payload) == (
+      HEADER_LEN_BYTES + NONCE_LEN_BYTES + TAG_LEN_BYTES
+    )
 
   def test_wrong_nonce_length_raises_value_error(self):
     _, tag, ciphertext = _sample_components()
@@ -56,7 +61,9 @@ class TestBuildPayload:
 class TestParsePayload:
   @pytest.mark.parametrize("ciphertext_len", [0, 1, 20, 5000])
   def test_round_trip_returns_original_components(self, ciphertext_len):
-    nonce, tag, ciphertext = _sample_components(ciphertext_len=ciphertext_len)
+    nonce, tag, ciphertext = _sample_components(
+      ciphertext_len=ciphertext_len
+    )
     payload = build_payload(nonce, tag, ciphertext)
 
     parsed = parse_payload(payload)
@@ -66,7 +73,8 @@ class TestParsePayload:
     assert parsed["ciphertext"] == ciphertext
 
   def test_payload_too_short_raises_value_error(self):
-    too_short = b"\x00" * (HEADER_LEN_BYTES + NONCE_LEN_BYTES)  # tanpa tag lengkap
+    # tanpa tag lengkap
+    too_short = b"\x00" * (HEADER_LEN_BYTES + NONCE_LEN_BYTES)
     with pytest.raises(ValueError, match="terlalu pendek"):
       parse_payload(too_short)
 

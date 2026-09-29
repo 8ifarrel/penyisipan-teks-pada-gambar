@@ -7,9 +7,10 @@
 #   - Ukuran potongan (chunking) IDAT: encoder berbeda memecah data hasil
 #     kompresi jadi beberapa chunk IDAT dengan ukuran buffer internal yang
 #     berbeda-beda (mis. Pillow 65536 byte, libpng 8192 byte). Ukuran ini
-#     dideteksi dari citra sumber lewat remember_source_compression_profile()
-#     dan diterapkan ulang saat menyimpan lewat _idat_chunk_size(), supaya
-#     jumlah/ukuran chunk IDAT citra hasil mengikuti citra sumbernya.
+#     dideteksi dari citra sumber lewat
+#     remember_source_compression_profile() dan diterapkan ulang saat
+#     menyimpan lewat _idat_chunk_size(), supaya jumlah/ukuran chunk IDAT
+#     citra hasil mengikuti citra sumbernya.
 
 import contextlib
 import io
@@ -49,7 +50,9 @@ def _iter_chunks(png_bytes: bytes):
       return
 
 
-def remember_source_compression_profile(image: Image.Image, raw_bytes: bytes) -> None:
+def remember_source_compression_profile(
+  image: Image.Image, raw_bytes: bytes
+) -> None:
   """
   Merekam profil kompresi PNG citra asli ke image.info, dibaca save_png()
   supaya citra hasil mengikuti karakteristik encoder sumbernya:
@@ -62,7 +65,11 @@ def remember_source_compression_profile(image: Image.Image, raw_bytes: bytes) ->
       sumber tidak bisa disimpulkan dari satu chunk saja).
   Tidak melakukan apa-apa jika raw_bytes bukan PNG valid.
   """
-  idat_lengths = [length for ctype, length, _ in _iter_chunks(raw_bytes) if ctype == b"IDAT"]
+  idat_lengths = [
+    length
+    for ctype, length, _ in _iter_chunks(raw_bytes)
+    if ctype == b"IDAT"
+  ]
   idat_total_bytes = sum(idat_lengths)
   if idat_total_bytes:
     image.info[SOURCE_IDAT_TOTAL_BYTES_KEY] = idat_total_bytes
@@ -86,10 +93,17 @@ def _idat_chunk_size(chunk_size):
 
 
 def _idat_bytes_at_level(image: Image.Image, compress_level: int) -> int:
-  """Menghitung total ukuran byte seluruh chunk IDAT pada level kompresi tertentu."""
+  """
+  Menghitung total ukuran byte seluruh chunk IDAT pada level kompresi
+  tertentu.
+  """
   buffer = io.BytesIO()
   image.save(buffer, format="PNG", compress_level=compress_level)
-  return sum(length for ctype, length, _ in _iter_chunks(buffer.getvalue()) if ctype == b"IDAT")
+  return sum(
+    length
+    for ctype, length, _ in _iter_chunks(buffer.getvalue())
+    if ctype == b"IDAT"
+  )
 
 
 def pick_compress_level(image: Image.Image, target_idat_bytes) -> int:
@@ -134,7 +148,10 @@ def pick_compress_level(image: Image.Image, target_idat_bytes) -> int:
   # (kompresi lebih longgar, ukuran lebih besar) bisa saja justru lebih
   # dekat ke target, jadi keduanya dibandingkan.
   candidates = [lo] if lo == 0 else [lo - 1, lo]
-  return min(candidates, key=lambda level: abs(size_at(level) - target_idat_bytes))
+  return min(
+    candidates,
+    key=lambda level: abs(size_at(level) - target_idat_bytes),
+  )
 
 
 def save_png(image: Image.Image, destination) -> None:

@@ -2,28 +2,49 @@ import os
 
 from PIL import Image
 
-from app.crypto.aes_gcm import AuthenticationError, decrypt_ciphertext, encrypt_text
-from app.metrics.quality import calculate_mse, calculate_psnr, categorize_quality
-from app.stego.lsb import CapacityError, calculate_capacity, embed_payload, extract_payload
+from app.crypto.aes_gcm import (
+  AuthenticationError,
+  decrypt_ciphertext,
+  encrypt_text,
+)
+from app.metrics.quality import (
+  calculate_mse,
+  calculate_psnr,
+  categorize_quality,
+)
+from app.stego.lsb import (
+  CapacityError,
+  calculate_capacity,
+  embed_payload,
+  extract_payload,
+)
 from app.stego.payload import build_payload, parse_payload
-from app.utils.formatting import format_id_decimal, format_id_int, format_size
+from app.utils.formatting import (
+  format_id_decimal,
+  format_id_int,
+  format_size,
+)
 from app.utils.png_io import remember_source_compression_profile, save_png
 
+PENGUJIAN_DIR = r"C:\Users\Farrel Sirah\Documents\.Skripsi\pengujian"
+IMG_DIR = os.path.join(PENGUJIAN_DIR, "img", "tanaman")
+TXT_DIR = os.path.join(PENGUJIAN_DIR, "txt")
+
 COVERS = [
-  (r"C:\Users\Farrel Sirah\Documents\.Skripsi\pengujian\img\tanaman\tanaman_128x.png", "128x"),
-  (r"C:\Users\Farrel Sirah\Documents\.Skripsi\pengujian\img\tanaman\tanaman_256x.png", "256x"),
-  (r"C:\Users\Farrel Sirah\Documents\.Skripsi\pengujian\img\tanaman\tanaman_512x.png", "512x"),
-  (r"C:\Users\Farrel Sirah\Documents\.Skripsi\pengujian\img\tanaman\tanaman_1024x.png", "1024x"),
+  (os.path.join(IMG_DIR, "tanaman_128x.png"), "128x"),
+  (os.path.join(IMG_DIR, "tanaman_256x.png"), "256x"),
+  (os.path.join(IMG_DIR, "tanaman_512x.png"), "512x"),
+  (os.path.join(IMG_DIR, "tanaman_1024x.png"), "1024x"),
 ]
 
 TEXTS = [
-  (r"C:\Users\Farrel Sirah\Documents\.Skripsi\pengujian\txt\teks-2000B_modified.txt", "2KB"),
-  (r"C:\Users\Farrel Sirah\Documents\.Skripsi\pengujian\txt\teks-4000B_modified.txt", "4KB"),
-  (r"C:\Users\Farrel Sirah\Documents\.Skripsi\pengujian\txt\teks-6000B_modified.txt", "6KB"),
-  (r"C:\Users\Farrel Sirah\Documents\.Skripsi\pengujian\txt\teks-8000B_modified.txt", "8KB"),
+  (os.path.join(TXT_DIR, "teks-2000B_modified.txt"), "2KB"),
+  (os.path.join(TXT_DIR, "teks-4000B_modified.txt"), "4KB"),
+  (os.path.join(TXT_DIR, "teks-6000B_modified.txt"), "6KB"),
+  (os.path.join(TXT_DIR, "teks-8000B_modified.txt"), "8KB"),
 ]
 
-OUT_DIR = r"C:\Users\Farrel Sirah\Documents\.Skripsi\pengujian\embeded\tanaman"
+OUT_DIR = os.path.join(PENGUJIAN_DIR, "embeded", "tanaman")
 
 results = []
 no = 16  # skenario 17-32 di Tabel 3.2 (citra cover ke-2)
@@ -45,13 +66,18 @@ for cover_path, res_label in COVERS:
     row = {
       "no": no,
       "citra_cover": f"tanaman_{res_label}.png",
-      "dimensi": f"{format_id_int(width)} \u00d7 {format_id_int(height)} piksel",
+      "dimensi": (
+        f"{format_id_int(width)} \u00d7 "
+        f"{format_id_int(height)} piksel"
+      ),
       "ukuran_cover": format_size(cover_size_bytes),
       "payload_label": payload_label,
     }
 
     encrypted = encrypt_text(text)
-    payload = build_payload(encrypted["nonce"], encrypted["tag"], encrypted["ciphertext"])
+    payload = build_payload(
+      encrypted["nonce"], encrypted["tag"], encrypted["ciphertext"]
+    )
     payload_bits_len = len(payload) * 8
 
     row["kapasitas_cover"] = format_size(capacity_bits // 8)
@@ -119,7 +145,11 @@ for cover_path, res_label in COVERS:
           ciphertext=parsed["ciphertext"],
         )
         row["status_dekripsi"] = "Berhasil"
-        row["catatan"] = "" if plaintext == text else "PERINGATAN: teks hasil ekstraksi tidak cocok!"
+        row["catatan"] = (
+          ""
+          if plaintext == text
+          else "PERINGATAN: teks hasil ekstraksi tidak cocok!"
+        )
       except AuthenticationError:
         row["status_dekripsi"] = "Gagal"
         row["catatan"] = "PERINGATAN: dekripsi gagal saat verifikasi ulang!"
@@ -137,7 +167,7 @@ print("=" * 100)
 import json
 
 with open(
-  r"C:\Users\Farrel Sirah\Documents\.Skripsi\pengujian\embeded\tanaman\_hasil_pengujian.json",
+  os.path.join(OUT_DIR, "_hasil_pengujian.json"),
   "w",
   encoding="utf-8",
 ) as f:

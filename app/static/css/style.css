@@ -1,18 +1,19 @@
-/* ============================================================================
+/* ========================================================================
  Stylesheet sistem.
 
  Pendekatan desain (v3, "terminal"): identitas visual bergaya
- command-line/keamanan yang cocok secara tematik dengan kripto & steganografi.
- Latar hampir hitam (bukan hitam murni), dengan SATU warna aksen, yaitu
- PUTIH, bukan hijau phosphor klise ala terminal, dipakai konsisten untuk
- semua elemen interaktif (tombol, tautan aktif, fokus). Label, judul, dan
- navigasi memakai font monospace (JetBrains Mono) untuk kesan "kode",
- sedangkan paragraf panjang tetap memakai font sans (IBM Plex Sans) supaya
- tetap nyaman dibaca. Sudut dibuat tegas/kecil (bukan membulat lega seperti
- versi sebelumnya), kartu memakai garis tepi tipis (bukan borderless).
- Warna hijau/kuning/merah TETAP dipertahankan sebagai warna SEMANTIK
- (baik/cukup/buruk) pada badge kualitas PSNR, karena ini independen dari
- warna aksen, bukan pengecualian terhadap aturan "satu aksen".
+ command-line/keamanan yang cocok secara tematik dengan kripto &
+ steganografi. Latar hampir hitam (bukan hitam murni), dengan SATU warna
+ aksen, yaitu PUTIH, bukan hijau phosphor klise ala terminal, dipakai
+ konsisten untuk semua elemen interaktif (tombol, tautan aktif, fokus).
+ Label, judul, dan navigasi memakai font monospace (JetBrains Mono) untuk
+ kesan "kode", sedangkan paragraf panjang tetap memakai font sans (IBM
+ Plex Sans) supaya tetap nyaman dibaca. Sudut dibuat tegas/kecil (bukan
+ membulat lega seperti versi sebelumnya), kartu memakai garis tepi tipis
+ (bukan borderless). Warna hijau/kuning/merah TETAP dipertahankan sebagai
+ warna SEMANTIK (baik/cukup/buruk) pada badge kualitas PSNR, karena ini
+ independen dari warna aksen, bukan pengecualian terhadap aturan "satu
+ aksen".
 
  Pendekatan responsif: MOBILE-FIRST. Gaya dasar (tanpa media query) berlaku
  untuk layar sempit (~375-480px); media query `min-width` di bawah
@@ -36,9 +37,9 @@
   12. Footer
   13. Breakpoint tablet (min-width: 640px)
   14. Breakpoint desktop (min-width: 1024px)
- ============================================================================ */
+ ======================================================================== */
 
-/* 1. Custom properties (design tokens) -------------------------------------- */
+/* 1. Custom properties (design tokens) --------------------------------- */
 
 :root {
   /* Warna: latar hampir-hitam + 1 teks putih kebiruan + 1 aksen PUTIH */
@@ -71,8 +72,8 @@
 
   /* Tipografi: mono utk judul/label/navigasi (identitas "kode"), sans utk
    paragraf panjang supaya tetap nyaman dibaca. */
-  --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", "SF Mono",
     Menlo, Consolas, "Liberation Mono", monospace;
 
@@ -112,7 +113,7 @@
   --touch-target: 44px; /* target sentuh minimum */
 }
 
-/* 2. Reset & base ------------------------------------------------------------ */
+/* 2. Reset & base ------------------------------------------------------ */
 
 *,
 *::before,
@@ -158,7 +159,7 @@ h3 {
   letter-spacing: -0.01em;
 }
 
-/* 3. Utilitas kecil ------------------------------------------------------------ */
+/* 3. Utilitas kecil ---------------------------------------------------- */
 
 .visually-hidden {
   position: absolute !important;
@@ -178,7 +179,7 @@ h3 {
   flex-shrink: 0;
 }
 
-/* 4. Layout ---------------------------------------------------------------------- */
+/* 4. Layout ------------------------------------------------------------ */
 
 .container {
   width: 100%;
@@ -210,7 +211,7 @@ h3 {
   padding-block: 0;
 }
 
-/* 5. Header & navigasi -------------------------------------------------------------- */
+/* 5. Header & navigasi ------------------------------------------------- */
 
 .site-header {
   position: sticky;
@@ -240,7 +241,8 @@ h3 {
   text-decoration: none;
 }
 
-/* Tombol hamburger: tampil di mobile, disembunyikan mulai breakpoint tablet */
+/* Tombol hamburger: tampil di mobile, disembunyikan mulai breakpoint
+ tablet */
 .nav-toggle {
   display: inline-flex;
   align-items: center;
@@ -296,7 +298,8 @@ h3 {
   font-size: 0.9rem;
   text-decoration: none;
   color: var(--color-text-muted);
-  transition: color var(--transition-fast), background-color var(--transition-fast);
+  transition: color var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
 .nav__link:hover {
@@ -310,7 +313,7 @@ h3 {
   background: var(--color-accent-soft);
 }
 
-/* 6. Tipografi halaman (page-header, hero & ilustrasi) -------------------------------- */
+/* 6. Tipografi halaman (page-header, hero & ilustrasi) ----------------- */
 
 .page-header,
 .hero,
@@ -374,7 +377,7 @@ h3 {
   gap: var(--space-3);
 }
 
-/* 7. Card / panel (bergaris tepi tipis ala panel console) ------------------------------- */
+/* 7. Card / panel (bergaris tepi tipis ala panel console) -------------- */
 
 .card {
   background: var(--color-surface-tint);
@@ -404,7 +407,7 @@ h3 {
   margin-top: var(--space-4);
 }
 
-/* 8. Form (label mono utk field, tetap sans utk hint) ------------------------------------ */
+/* 8. Form (label mono utk field, tetap sans utk hint) ------------------ */
 
 .form-field {
   max-width: var(--content-max);
@@ -441,7 +444,8 @@ textarea {
   border-radius: var(--radius-md);
   background: var(--color-surface);
   color: var(--color-text);
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition: border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 input[type="text"]:focus,
@@ -498,8 +502,9 @@ textarea.key-display {
 
 /* Area unggah drag-and-drop. Input file ASLI tetap ada dan menutupi seluruh
  area (opacity: 0) sehingga klik & drag-and-drop bawaan browser tetap
- berfungsi penuh secara native. Lapisan visual di atasnya (.dropzone__content)
- murni dekoratif (pointer-events: none) supaya klik menembus ke input. */
+ berfungsi penuh secara native. Lapisan visual di atasnya
+ (.dropzone__content) murni dekoratif (pointer-events: none) supaya klik
+ menembus ke input. */
 .dropzone {
   position: relative;
   padding: var(--space-6) var(--space-4);
@@ -507,7 +512,8 @@ textarea.key-display {
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   text-align: center;
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  transition: border-color var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
 .dropzone__input {
@@ -568,7 +574,7 @@ textarea.key-display {
   color: var(--color-accent);
 }
 
-/* 9. Tombol (sudut tegas, huruf kapital ala perintah CLI) ------------------------------- */
+/* 9. Tombol (sudut tegas, huruf kapital ala perintah CLI) -------------- */
 
 .btn {
   display: inline-flex;
@@ -588,7 +594,8 @@ textarea.key-display {
   color: var(--color-accent-contrast);
   text-decoration: none;
   cursor: pointer;
-  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  transition: background-color var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .btn:hover {
@@ -650,7 +657,7 @@ textarea.key-display {
   flex: 1;
 }
 
-/* 10. Hasil: preview citra & badge kualitas --------------------------------------------- */
+/* 10. Hasil: preview citra & badge kualitas ---------------------------- */
 
 .image-frame {
   display: flex;
@@ -784,7 +791,7 @@ textarea.key-display {
   color: var(--color-error-text);
 }
 
-/* 11. Flash messages -------------------------------------------------------------------- */
+/* 11. Flash messages --------------------------------------------------- */
 
 .flash-messages {
   max-width: var(--content-max);
@@ -814,7 +821,7 @@ textarea.key-display {
   border-left: 3px solid var(--color-success-text);
 }
 
-/* 12. Footer ------------------------------------------------------------------------------ */
+/* 12. Footer ----------------------------------------------------------- */
 
 .site-footer {
   padding-block: var(--space-4);
@@ -827,7 +834,7 @@ textarea.key-display {
   text-align: center;
 }
 
-/* 13. Breakpoint tablet (min-width: 640px) ------------------------------------------------- */
+/* 13. Breakpoint tablet (min-width: 640px) ----------------------------- */
 
 @media (min-width: 640px) {
   .nav-toggle {
@@ -877,7 +884,7 @@ textarea.key-display {
   }
 }
 
-/* 14. Breakpoint desktop (min-width: 1024px) ------------------------------------------------ */
+/* 14. Breakpoint desktop (min-width: 1024px) --------------------------- */
 
 @media (min-width: 1024px) {
   .container {
@@ -894,7 +901,8 @@ textarea.key-display {
   }
 }
 
-/* Layar sangat sempit: rapatkan sedikit spacing vertikal & ukuran dropzone */
+/* Layar sangat sempit: rapatkan sedikit spacing vertikal & ukuran
+ dropzone */
 @media (max-width: 374px) {
   .page {
     padding-block: var(--space-5) var(--space-6);

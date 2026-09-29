@@ -51,7 +51,8 @@ def calculate_mse(cover_image, stego_image) -> float:
   if cover_array.shape != stego_array.shape:
     raise ValueError(
       "Dimensi citra cover dan citra stego harus sama untuk "
-      f"menghitung MSE (cover: {cover_array.shape}, stego: {stego_array.shape})."
+      f"menghitung MSE (cover: {cover_array.shape}, "
+      f"stego: {stego_array.shape})."
     )
 
   squared_diff = (cover_array - stego_array) ** 2
