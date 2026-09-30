@@ -49,7 +49,9 @@ def _make_png_image(
   return Image.open(buffer)
 
 
-def _make_jpeg_image(width: int, height: int, seed: int = 0) -> Image.Image:
+def _make_jpeg_image(
+  width: int, height: int, seed: int = 0
+) -> Image.Image:
   rng = np.random.default_rng(seed)
   array = rng.integers(0, 256, size=(height, width, 3), dtype=np.uint8)
   image = Image.fromarray(array, mode="RGB")
@@ -144,7 +146,8 @@ class TestEmbedExtractRoundTrip:
     )
     assert np.all(diff <= 1)
 
-    # Kanal yang tidak dipakai payload harus identik persis dengan cover.
+    # Kanal yang tidak dipakai payload harus identik persis dengan
+    # cover.
     payload_bits_len = len(payload) * 8
     assert np.array_equal(
       cover_array[payload_bits_len:], stego_array[payload_bits_len:]
@@ -156,8 +159,8 @@ class TestCapacityError:
     payload = _real_payload(
       "payload yang jauh lebih panjang dari kapasitas citra kecil"
     )
-    # Citra 2x2 RGB -> kapasitas 2*2*3 = 12 bit = 1.5 byte, jauh di bawah
-    # kebutuhan payload (header saja sudah 4 byte = 32 bit).
+    # Citra 2x2 RGB -> kapasitas 2*2*3 = 12 bit = 1.5 byte, jauh di
+    # bawah kebutuhan payload (header saja sudah 4 byte = 32 bit).
     tiny_cover = _make_png_image(width=2, height=2, seed=5)
 
     with pytest.raises(CapacityError, match="[Kk]apasitas"):
@@ -177,7 +180,8 @@ class TestCapacityError:
     # tidak lagi bisa dipenuhi oleh sisa data pada citra.
     payload = _real_payload("p")
     payload_bits_len = len(payload) * 8
-    # Kapasitas hanya cukup untuk payload ini persis (tanpa piksel lebih).
+    # Kapasitas hanya cukup untuk payload ini persis (tanpa piksel
+    # lebih).
     num_channels_needed = payload_bits_len
     side = int(np.ceil(np.sqrt(num_channels_needed / 3))) + 1
     cover = _make_png_image(width=side, height=side, seed=7)
@@ -210,14 +214,18 @@ class TestImageValidation:
 
   def test_embed_raises_when_not_rgb(self):
     payload = _real_payload("x")
-    grayscale_image = _make_png_image(width=64, height=64, mode="L", seed=9)
+    grayscale_image = _make_png_image(
+      width=64, height=64, mode="L", seed=9
+    )
 
     with pytest.raises(ImageValidationError, match="RGB"):
       embed_payload(grayscale_image, payload)
 
   def test_embed_raises_when_rgba(self):
     payload = _real_payload("x")
-    rgba_image = _make_png_image(width=64, height=64, mode="RGBA", seed=10)
+    rgba_image = _make_png_image(
+      width=64, height=64, mode="RGBA", seed=10
+    )
 
     with pytest.raises(ImageValidationError, match="RGB"):
       embed_payload(rgba_image, payload)

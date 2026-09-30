@@ -12,13 +12,14 @@ from flask import Flask
 def create_app():
   app = Flask(__name__)
 
-  # TODO: pindahkan ke config terpisah jika diperlukan (mis. app/config.py)
+  # TODO: pindahkan ke config terpisah jika diperlukan (mis.
+  # app/config.py)
   # batas ukuran unggahan
   app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 
   # Dipakai Flask untuk menandatangani session cookie flash message.
-  # Diambil dari environment variable jika tersedia, jika tidak dibangkitkan
-  # acak setiap kali proses dijalankan.
+  # Diambil dari environment variable jika tersedia, jika tidak
+  # dibangkitkan acak setiap kali proses dijalankan.
   app.config["SECRET_KEY"] = (
     os.environ.get("SECRET_KEY") or secrets.token_hex(32)
   )
@@ -29,8 +30,8 @@ def create_app():
   app.register_blueprint(main_bp)
 
   # Menyediakan variabel developer_mode ke seluruh template, mengikuti
-  # status debug Flask (app.debug). Dipakai untuk menampilkan/menyembunyikan
-  # panel "Info Developer" di halaman hasil.
+  # status debug Flask (app.debug). Dipakai untuk
+  # menampilkan/menyembunyikan panel "Info Developer" di halaman hasil.
   @app.context_processor
   def inject_developer_mode():
     return {"developer_mode": app.debug}

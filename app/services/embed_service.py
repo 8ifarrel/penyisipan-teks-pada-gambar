@@ -1,5 +1,6 @@
-# Logic lengkap fitur "Sisipkan Teks": show_form() menampilkan form kosong
-# (GET /sisipkan), handle_submit() memproses submit-nya (POST /sisipkan).
+# Logic lengkap fitur "Sisipkan Teks": show_form() menampilkan form
+# kosong (GET /sisipkan), handle_submit() memproses submit-nya
+# (POST /sisipkan).
 
 import os
 
@@ -31,8 +32,8 @@ from app.utils.temp_files import (
 )
 from app.utils.uploads import file_size_bytes, open_uploaded_image
 
-# Daftar field "Info Developer" untuk halaman Sisipkan. Diisi progresif di
-# handle_submit(); field yang belum sempat dihitung tetap "-".
+# Daftar field "Info Developer" untuk halaman Sisipkan. Diisi progresif
+# di handle_submit(); field yang belum sempat dihitung tetap "-".
 _DEV_INFO_KEYS = [
   "cover_dimensions",
   "cover_size",
@@ -50,10 +51,13 @@ _DEV_INFO_KEYS = [
 
 def show_form():
   """Menampilkan form Sisipkan Teks kosong (GET /sisipkan)."""
-  # Panel Info Developer sudah tampil sejak kunjungan awal (seluruh field
-  # "-"), diperbarui langsung di sisi klien lewat initDevInfoLive() di
-  # main.js begitu pengguna memilih foto/mengetik teks.
-  dev_info = empty_dev_info(_DEV_INFO_KEYS) if current_app.debug else None
+  # Panel Info Developer sudah tampil sejak kunjungan awal (seluruh
+  # field "-"), diperbarui langsung di sisi klien lewat
+  # initDevInfoLive() di main.js begitu pengguna memilih foto/mengetik
+  # teks.
+  dev_info = (
+    empty_dev_info(_DEV_INFO_KEYS) if current_app.debug else None
+  )
   return render_template("embed.html", dev_info=dev_info)
 
 
@@ -138,9 +142,9 @@ def handle_submit():
   # 6. Sisipkan payload dengan LSB
   stego_image = embed_payload(cover_image, payload)
   # embed_payload() mengembalikan objek citra baru (.info kosong), jadi
-  # profil kompresi cover asli diteruskan manual di sini supaya save_png()
-  # nanti tetap bisa menyesuaikan citra stego dengan citra cover aslinya
-  # (lihat app/utils/png_io.py).
+  # profil kompresi cover asli diteruskan manual di sini supaya
+  # save_png() nanti tetap bisa menyesuaikan citra stego dengan citra
+  # cover aslinya (lihat app/utils/png_io.py).
   stego_image.info.update(cover_image.info)
   if dev_info is not None:
     dev_info["embed_status"] = "Berhasil"
@@ -161,7 +165,8 @@ def handle_submit():
   # 8. Simpan citra stego ke folder temporer untuk pratinjau & unduhan
   file_id = save_stego_image(stego_image)
   if dev_info is not None:
-    stego_size_bytes = os.path.getsize(os.path.join(temp_dir(), file_id))
+    stego_path = os.path.join(temp_dir(), file_id)
+    stego_size_bytes = os.path.getsize(stego_path)
     dev_info["stego_size"] = format_size(stego_size_bytes)
 
   # 9. Output: citra stego, kategori kualitas, key, PSNR

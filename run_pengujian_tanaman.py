@@ -24,7 +24,10 @@ from app.utils.formatting import (
   format_id_int,
   format_size,
 )
-from app.utils.png_io import remember_source_compression_profile, save_png
+from app.utils.png_io import (
+  remember_source_compression_profile,
+  save_png,
+)
 
 PENGUJIAN_DIR = r"C:\Users\Farrel Sirah\Documents\.Skripsi\pengujian"
 IMG_DIR = os.path.join(PENGUJIAN_DIR, "img", "tanaman")
@@ -125,7 +128,8 @@ for cover_path, res_label in COVERS:
 
     # Uji ekstraksi ulang dari FILE yang benar-benar tersimpan di disk
     # (bukan dari objek stego_image di memori), supaya pengujian ini
-    # benar-benar merepresentasikan alur nyata: unggah file -> ekstraksi.
+    # benar-benar merepresentasikan alur nyata: unggah file ->
+    # ekstraksi.
     stego_reloaded = Image.open(out_path)
     stego_reloaded.load()
     try:
@@ -152,7 +156,9 @@ for cover_path, res_label in COVERS:
         )
       except AuthenticationError:
         row["status_dekripsi"] = "Gagal"
-        row["catatan"] = "PERINGATAN: dekripsi gagal saat verifikasi ulang!"
+        row["catatan"] = (
+          "PERINGATAN: dekripsi gagal saat verifikasi ulang!"
+        )
     else:
       row["status_dekripsi"] = "-"
       row["catatan"] = "PERINGATAN: ekstraksi ulang gagal!"

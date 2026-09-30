@@ -30,8 +30,8 @@ Mulawarman.
 
 ## Cara kerja
 
-1. **Enkripsi**: teks dienkripsi dengan AES-128-GCM menggunakan kunci acak
-   sekali pakai (CSPRNG), menghasilkan ciphertext, nonce, dan
+1. **Enkripsi**: teks dienkripsi dengan AES-128-GCM menggunakan kunci
+   acak sekali pakai (CSPRNG), menghasilkan ciphertext, nonce, dan
    authentication tag.
 2. **Pembentukan payload**: nonce, tag, dan ciphertext digabung menjadi
    satu payload biner dengan header 4-byte (big-endian) penanda panjang
@@ -39,11 +39,11 @@ Mulawarman.
 3. **Penyisipan LSB**: setiap bit payload disisipkan ke bit paling tidak
    signifikan tiap kanal warna (R, G, B) citra, dimulai dari piksel
    pertama.
-4. **Ukur kualitas**: citra asli & citra hasil dibandingkan lewat MSE dan
-   PSNR.
-5. **Ekstraksi & dekripsi**: proses sebaliknya, bit LSB dibaca dari citra,
-   payload disusun ulang, lalu didekripsi kembali menjadi teks asli
-   menggunakan kunci AES yang sama.
+4. **Ukur kualitas**: citra asli & citra hasil dibandingkan lewat MSE
+   dan PSNR.
+5. **Ekstraksi & dekripsi**: proses sebaliknya, bit LSB dibaca dari
+   citra, payload disusun ulang, lalu didekripsi kembali menjadi teks
+   asli menggunakan kunci AES yang sama.
 
 ## Teknologi
 
@@ -80,7 +80,8 @@ venv\Scripts\activate        # Windows
 source venv/bin/activate     # macOS/Linux
 
 # 2. Install dependency
-pip install -r requirements-dev.txt   # termasuk pytest, untuk development
+# termasuk pytest, untuk development:
+pip install -r requirements-dev.txt
 # atau, hanya dependency untuk menjalankan aplikasi:
 pip install -r requirements.txt
 

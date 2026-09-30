@@ -27,7 +27,8 @@ class TestBuildPayload:
     payload = build_payload(nonce, tag, ciphertext)
 
     expected_length = (
-      HEADER_LEN_BYTES + NONCE_LEN_BYTES + TAG_LEN_BYTES + len(ciphertext)
+      HEADER_LEN_BYTES + NONCE_LEN_BYTES + TAG_LEN_BYTES
+      + len(ciphertext)
     )
     assert len(payload) == expected_length
 
@@ -82,7 +83,8 @@ class TestParsePayload:
     nonce, tag, ciphertext = _sample_components(ciphertext_len=10)
     payload = build_payload(nonce, tag, ciphertext)
 
-    # Rusak nilai header agar tidak sesuai panjang byte payload sebenarnya.
+    # Rusak nilai header agar tidak sesuai panjang byte payload
+    # sebenarnya.
     corrupted_header = struct.pack(HEADER_STRUCT_FORMAT, 999999)
     corrupted_payload = corrupted_header + payload[HEADER_LEN_BYTES:]
 

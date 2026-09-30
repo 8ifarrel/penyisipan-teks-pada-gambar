@@ -9,16 +9,17 @@
 # Library yang digunakan: `cryptography`
 # (cryptography.hazmat.primitives.ciphers.aead.AESGCM)
 #
-# Ciphertext dan authentication tag pada modul ini selalu berupa dua nilai
-# bytes terpisah (bukan tergabung di akhir buffer seperti keluaran default
-# AESGCM.encrypt()), karena payload penyisipan menyimpan nonce, tag, dan
-# ciphertext sebagai tiga komponen berbeda. Keduanya digabungkan kembali
-# hanya saat dipanggilkan ke AESGCM.encrypt()/decrypt().
+# Ciphertext dan authentication tag pada modul ini selalu berupa dua
+# nilai bytes terpisah (bukan tergabung di akhir buffer seperti
+# keluaran default AESGCM.encrypt()), karena payload penyisipan
+# menyimpan nonce, tag, dan ciphertext sebagai tiga komponen berbeda.
+# Keduanya digabungkan kembali hanya saat dipanggilkan ke
+# AESGCM.encrypt()/decrypt().
 #
-# Verifikasi authentication tag dilakukan sepenuhnya oleh AESGCM.decrypt():
-# jika tag tidak valid, library melempar cryptography.exceptions.InvalidTag,
-# yang ditangkap di decrypt_ciphertext() dan dilempar ulang sebagai
-# AuthenticationError.
+# Verifikasi authentication tag dilakukan sepenuhnya oleh
+# AESGCM.decrypt(): jika tag tidak valid, library melempar
+# cryptography.exceptions.InvalidTag, yang ditangkap di
+# decrypt_ciphertext() dan dilempar ulang sebagai AuthenticationError.
 
 import secrets
 
@@ -32,8 +33,8 @@ TAG_LEN_BYTES = 16   # 128 bit
 
 class AuthenticationError(Exception):
   """
-  Dilempar ketika authentication tag (T) yang diberikan tidak sama dengan
-  authentication tag pembanding (T') hasil verifikasi AES-GCM.
+  Dilempar ketika authentication tag (T) yang diberikan tidak sama
+  dengan authentication tag pembanding (T') hasil verifikasi AES-GCM.
 
   Jika T != T', proses dekripsi tidak boleh dilanjutkan.
   """
@@ -110,8 +111,9 @@ def decrypt_ciphertext(
 
   Alur:
    1. Terima nonce, authentication tag, key, dan ciphertext
-   2. Verifikasi authentication tag (T) terhadap tag pembanding (T'). Jika
-    T != T', proses dihentikan dan AuthenticationError dilempar
+   2. Verifikasi authentication tag (T) terhadap tag pembanding
+    (T'). Jika T != T', proses dihentikan dan AuthenticationError
+    dilempar
    3. Jika T = T' -> dekripsi ciphertext dengan key & nonce
    4. Decode hasil dekripsi dari bytes ke teks dengan UTF-8
 

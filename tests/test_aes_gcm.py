@@ -67,7 +67,8 @@ class TestEncryptText:
     assert len(result["ciphertext"]) == len(plaintext.encode("utf-8"))
 
   def test_ciphertext_does_not_contain_tag_appended(self):
-    # Memastikan tag benar-benar dipisahkan, bukan menempel di ciphertext.
+    # Memastikan tag benar-benar dipisahkan, bukan menempel di
+    # ciphertext.
     result = encrypt_text("contoh teks rahasia")
     assert not result["ciphertext"].endswith(result["tag"])
 
@@ -77,8 +78,8 @@ class TestEncryptText:
 
     assert result_a["key"] != result_b["key"]
     assert result_a["nonce"] != result_b["nonce"]
-    # Ciphertext & tag pun berbeda walau plaintext sama, karena key/nonce
-    # beda.
+    # Ciphertext & tag pun berbeda walau plaintext sama, karena
+    # key/nonce beda.
     assert result_a["ciphertext"] != result_b["ciphertext"]
     assert result_a["tag"] != result_b["tag"]
 
@@ -109,7 +110,9 @@ class TestRoundTrip:
 
 class TestAuthenticationFailure:
   def _encrypt_sample(self):
-    return encrypt_text("pesan rahasia yang harus terjaga integritasnya")
+    return encrypt_text(
+      "pesan rahasia yang harus terjaga integritasnya"
+    )
 
   def test_wrong_tag_raises_authentication_error(self):
     encrypted = self._encrypt_sample()

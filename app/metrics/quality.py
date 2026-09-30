@@ -12,9 +12,9 @@
 #   20 dB <= PSNR <= 30 dB -> "Kualitas citra stego masih bisa diterima"
 #   PSNR > 30 dB           -> "Kualitas citra stego baik"
 #
-# MSE dihitung langsung atas seluruh elemen array RGB (m x n x 3 elemen)
-# lewat np.mean(), hasilnya identik dengan menghitung MSE tiap kanal warna
-# secara terpisah lalu dirata-ratakan.
+# MSE dihitung langsung atas seluruh elemen array RGB (m x n x 3
+# elemen) lewat np.mean(), hasilnya identik dengan menghitung MSE tiap
+# kanal warna secara terpisah lalu dirata-ratakan.
 
 import math
 
@@ -42,9 +42,10 @@ def calculate_mse(cover_image, stego_image) -> float:
       karena MSE piksel-demi-piksel hanya terdefinisi untuk citra
       dengan ukuran yang sama.
   """
-  # Konversi ke float64 SEBELUM dikurangkan, karena piksel PIL bertipe uint8
-  # (0-255), sehingga pengurangan langsung pada tipe uint8 akan underflow
-  # (wrap-around) alih-alih menghasilkan nilai negatif yang benar.
+  # Konversi ke float64 SEBELUM dikurangkan, karena piksel PIL bertipe
+  # uint8 (0-255), sehingga pengurangan langsung pada tipe uint8 akan
+  # underflow (wrap-around) alih-alih menghasilkan nilai negatif yang
+  # benar.
   cover_array = np.asarray(cover_image, dtype=np.float64)
   stego_array = np.asarray(stego_image, dtype=np.float64)
 
@@ -77,7 +78,8 @@ def calculate_psnr(mse: float) -> float:
     Nilai PSNR dalam desibel (dB), atau float("inf") jika mse == 0.
 
   Raises:
-    ValueError: jika mse bernilai negatif (tidak valid secara matematis).
+    ValueError: jika mse bernilai negatif (tidak valid secara
+      matematis).
   """
   if mse < 0:
     raise ValueError(f"MSE tidak boleh negatif, diterima: {mse}.")

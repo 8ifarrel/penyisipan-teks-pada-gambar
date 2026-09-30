@@ -1,12 +1,13 @@
 # Routes/Blueprint Flask.
 #
-# Berisi tabel routing saja (endpoint -> handler). Logic tiap fitur ada di
-# app/services/ (satu file per fitur: embed_service.py, extract_service.py),
-# dan logic kripto/steganografi murni ada di app/crypto & app/stego.
+# Berisi tabel routing saja (endpoint -> handler). Logic tiap fitur
+# ada di app/services/ (satu file per fitur: embed_service.py,
+# extract_service.py), dan logic kripto/steganografi murni ada di
+# app/crypto & app/stego.
 #
 # Kunci AES-128 ditampilkan ke pengguna dalam bentuk hex (32 karakter),
-# tidak pernah disimpan ke file/session di server; hanya disisipkan ke HTML
-# halaman hasil sekali saat response dikirim.
+# tidak pernah disimpan ke file/session di server; hanya disisipkan ke
+# HTML halaman hasil sekali saat response dikirim.
 
 from flask import Blueprint, render_template, request, send_file
 

@@ -1,5 +1,6 @@
-# Logic lengkap fitur "Ekstraksi Teks": show_form() menampilkan form kosong
-# (GET /ekstraksi), handle_submit() memproses submit-nya (POST /ekstraksi).
+# Logic lengkap fitur "Ekstraksi Teks": show_form() menampilkan form
+# kosong (GET /ekstraksi), handle_submit() memproses submit-nya
+# (POST /ekstraksi).
 
 import base64
 import io
@@ -36,15 +37,17 @@ _DEV_INFO_KEYS = [
 
 def show_form():
   """Menampilkan form Ekstraksi Teks kosong (GET /ekstraksi)."""
-  dev_info = empty_dev_info(_DEV_INFO_KEYS) if current_app.debug else None
+  dev_info = (
+    empty_dev_info(_DEV_INFO_KEYS) if current_app.debug else None
+  )
   return render_template("extract.html", dev_info=dev_info)
 
 
 def handle_submit():
   """Memproses submit form Ekstraksi Teks (POST /ekstraksi)."""
-  # Info developer: rangkuman teknis tiap tahap proses. Dibentuk hanya saat
-  # mode debug aktif, diisi progresif sehingga field yang belum tercapai
-  # tetap "-".
+  # Info developer: rangkuman teknis tiap tahap proses. Dibentuk hanya
+  # saat mode debug aktif, diisi progresif sehingga field yang belum
+  # tercapai tetap "-".
   dev_info = None
   if current_app.debug:
     dev_info = empty_dev_info(_DEV_INFO_KEYS)
@@ -64,7 +67,8 @@ def handle_submit():
   if dev_info is not None:
     stego_width, stego_height = stego_image.size
     dev_info["stego_dimensions"] = (
-      f"{format_id_int(stego_width)} × {format_id_int(stego_height)} piksel"
+      f"{format_id_int(stego_width)} × "
+      f"{format_id_int(stego_height)} piksel"
     )
 
   # 2. Validasi format PNG & model warna RGB 24-bit

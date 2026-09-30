@@ -1,4 +1,4 @@
-/* ========================================================================
+/* ====================================================================
  Stylesheet sistem.
 
  Pendekatan desain (v3, "terminal"): identitas visual bergaya
@@ -6,18 +6,19 @@
  steganografi. Latar hampir hitam (bukan hitam murni), dengan SATU warna
  aksen, yaitu PUTIH, bukan hijau phosphor klise ala terminal, dipakai
  konsisten untuk semua elemen interaktif (tombol, tautan aktif, fokus).
- Label, judul, dan navigasi memakai font monospace (JetBrains Mono) untuk
- kesan "kode", sedangkan paragraf panjang tetap memakai font sans (IBM
- Plex Sans) supaya tetap nyaman dibaca. Sudut dibuat tegas/kecil (bukan
- membulat lega seperti versi sebelumnya), kartu memakai garis tepi tipis
- (bukan borderless). Warna hijau/kuning/merah TETAP dipertahankan sebagai
- warna SEMANTIK (baik/cukup/buruk) pada badge kualitas PSNR, karena ini
- independen dari warna aksen, bukan pengecualian terhadap aturan "satu
- aksen".
+ Label, judul, dan navigasi memakai font monospace (JetBrains Mono)
+ untuk kesan "kode", sedangkan paragraf panjang tetap memakai font
+ sans (IBM Plex Sans) supaya tetap nyaman dibaca. Sudut dibuat
+ tegas/kecil (bukan membulat lega seperti versi sebelumnya), kartu
+ memakai garis tepi tipis (bukan borderless). Warna hijau/kuning/merah
+ TETAP dipertahankan sebagai warna SEMANTIK (baik/cukup/buruk) pada
+ badge kualitas PSNR, karena ini independen dari warna aksen, bukan
+ pengecualian terhadap aturan "satu aksen".
 
- Pendekatan responsif: MOBILE-FIRST. Gaya dasar (tanpa media query) berlaku
- untuk layar sempit (~375-480px); media query `min-width` di bawah
- MENAMBAHKAN penyesuaian untuk tablet (>=640px) dan desktop (>=1024px).
+ Pendekatan responsif: MOBILE-FIRST. Gaya dasar (tanpa media query)
+ berlaku untuk layar sempit (~375-480px); media query `min-width` di
+ bawah MENAMBAHKAN penyesuaian untuk tablet (>=640px) dan desktop
+ (>=1024px).
 
  Font: JetBrains Mono & IBM Plex Sans dimuat dari Google Fonts (lihat
  base.html) dengan fallback ke font monospace/sans sistem.
@@ -37,12 +38,13 @@
   12. Footer
   13. Breakpoint tablet (min-width: 640px)
   14. Breakpoint desktop (min-width: 1024px)
- ======================================================================== */
+ ==================================================================== */
 
-/* 1. Custom properties (design tokens) --------------------------------- */
+/* 1. Custom properties (design tokens) ----------------------------- */
 
 :root {
-  /* Warna: latar hampir-hitam + 1 teks putih kebiruan + 1 aksen PUTIH */
+  /* Warna: latar hampir-hitam + 1 teks putih kebiruan + 1 aksen
+   PUTIH */
   --color-bg: #0b0f14;
   --color-surface: #0f1420;           /* input, dropzone, image-frame */
   --color-surface-tint: #131a24;      /* kartu/panel */
@@ -61,8 +63,8 @@
   --color-success-bg: rgba(110, 231, 176, 0.12);
   --color-success-text: #6ee7b0;
 
-  /* Hijau/kuning/merah di sini adalah warna SEMANTIK badge kualitas PSNR
-   (baik/cukup/buruk), independen dari warna aksen di atas. */
+  /* Hijau/kuning/merah di sini adalah warna SEMANTIK badge kualitas
+   PSNR (baik/cukup/buruk), independen dari warna aksen di atas. */
   --color-badge-good-bg: rgba(110, 231, 176, 0.12);
   --color-badge-good-text: #6ee7b0;
   --color-badge-ok-bg: rgba(240, 177, 85, 0.14);
@@ -70,22 +72,23 @@
   --color-badge-bad-bg: rgba(239, 106, 106, 0.12);
   --color-badge-bad-text: #ff9b9b;
 
-  /* Tipografi: mono utk judul/label/navigasi (identitas "kode"), sans utk
-   paragraf panjang supaya tetap nyaman dibaca. */
+  /* Tipografi: mono utk judul/label/navigasi (identitas "kode"), sans
+   utk paragraf panjang supaya tetap nyaman dibaca. */
   --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", "SF Mono",
-    Menlo, Consolas, "Liberation Mono", monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular",
+    "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 
   --fs-sm: 0.875rem;
   --fs-body: 1rem;
   --fs-lg: 1.125rem;
   --fs-h2: 1.15rem;
   --fs-h1: clamp(1.65rem, 1.3rem + 1.6vw, 2.25rem);
-  /* Diperkecil dari clamp(2.4rem, 1.6rem + 4.5vw, 3.75rem): nama halaman
-   sekarang berupa frasa deskriptif panjang ("Penyisipan Teks pada
-   Gambar"), bukan satu kata brand pendek, jadi ukuran hero sebelumnya
-   bikin judul kepanjangan/wrap berlebihan di layar sempit. */
+  /* Diperkecil dari clamp(2.4rem, 1.6rem + 4.5vw, 3.75rem): nama
+   halaman sekarang berupa frasa deskriptif panjang ("Penyisipan Teks
+   pada Gambar"), bukan satu kata brand pendek, jadi ukuran hero
+   sebelumnya bikin judul kepanjangan/wrap berlebihan di layar
+   sempit. */
   --fs-hero: clamp(1.75rem, 1.3rem + 2.5vw, 2.75rem);
   --lh-body: 1.6;
 
@@ -99,7 +102,8 @@
   --space-7: 3rem;
   --space-8: 4rem;
 
-  /* Radius: tegas & kecil, bukan membulat lega, untuk kesan panel CLI */
+  /* Radius: tegas & kecil, bukan membulat lega, untuk kesan panel
+   CLI */
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
@@ -113,7 +117,7 @@
   --touch-target: 44px; /* target sentuh minimum */
 }
 
-/* 2. Reset & base ------------------------------------------------------ */
+/* 2. Reset & base -------------------------------------------------- */
 
 *,
 *::before,
@@ -159,7 +163,7 @@ h3 {
   letter-spacing: -0.01em;
 }
 
-/* 3. Utilitas kecil ---------------------------------------------------- */
+/* 3. Utilitas kecil ------------------------------------------------ */
 
 .visually-hidden {
   position: absolute !important;
@@ -179,7 +183,7 @@ h3 {
   flex-shrink: 0;
 }
 
-/* 4. Layout ------------------------------------------------------------ */
+/* 4. Layout -------------------------------------------------------- */
 
 .container {
   width: 100%;
@@ -211,7 +215,7 @@ h3 {
   padding-block: 0;
 }
 
-/* 5. Header & navigasi ------------------------------------------------- */
+/* 5. Header & navigasi --------------------------------------------- */
 
 .site-header {
   position: sticky;
@@ -273,7 +277,8 @@ h3 {
   display: flex;
 }
 
-/* Nav: tersembunyi (dropdown) secara default di mobile, dibuka lewat JS */
+/* Nav: tersembunyi (dropdown) secara default di mobile, dibuka lewat
+ JS */
 .nav {
   display: none;
   flex-direction: column;
@@ -313,7 +318,7 @@ h3 {
   background: var(--color-accent-soft);
 }
 
-/* 6. Tipografi halaman (page-header, hero & ilustrasi) ----------------- */
+/* 6. Tipografi halaman (page-header, hero & ilustrasi) ------------- */
 
 .page-header,
 .hero,
@@ -377,7 +382,7 @@ h3 {
   gap: var(--space-3);
 }
 
-/* 7. Card / panel (bergaris tepi tipis ala panel console) -------------- */
+/* 7. Card / panel (bergaris tepi tipis ala panel console) ---------- */
 
 .card {
   background: var(--color-surface-tint);
@@ -397,7 +402,8 @@ h3 {
 }
 
 /* Tombol yang berdiri langsung sebagai anak card (unduh, salin) dibuat
- selebar penuh di mobile agar mudah disentuh; melebar wajar di tablet+. */
+ selebar penuh di mobile agar mudah disentuh; melebar wajar di
+ tablet+. */
 .card > .btn,
 .copy-row .btn {
   width: 100%;
@@ -407,7 +413,7 @@ h3 {
   margin-top: var(--space-4);
 }
 
-/* 8. Form (label mono utk field, tetap sans utk hint) ------------------ */
+/* 8. Form (label mono utk field, tetap sans utk hint) -------------- */
 
 .form-field {
   max-width: var(--content-max);
@@ -500,11 +506,11 @@ textarea.key-display {
   height: 1.1rem;
 }
 
-/* Area unggah drag-and-drop. Input file ASLI tetap ada dan menutupi seluruh
- area (opacity: 0) sehingga klik & drag-and-drop bawaan browser tetap
- berfungsi penuh secara native. Lapisan visual di atasnya
- (.dropzone__content) murni dekoratif (pointer-events: none) supaya klik
- menembus ke input. */
+/* Area unggah drag-and-drop. Input file ASLI tetap ada dan menutupi
+ seluruh area (opacity: 0) sehingga klik & drag-and-drop bawaan
+ browser tetap berfungsi penuh secara native. Lapisan visual di
+ atasnya (.dropzone__content) murni dekoratif (pointer-events: none)
+ supaya klik menembus ke input. */
 .dropzone {
   position: relative;
   padding: var(--space-6) var(--space-4);
@@ -574,7 +580,7 @@ textarea.key-display {
   color: var(--color-accent);
 }
 
-/* 9. Tombol (sudut tegas, huruf kapital ala perintah CLI) -------------- */
+/* 9. Tombol (sudut tegas, huruf kapital ala perintah CLI) ---------- */
 
 .btn {
   display: inline-flex;
@@ -657,7 +663,7 @@ textarea.key-display {
   flex: 1;
 }
 
-/* 10. Hasil: preview citra & badge kualitas ---------------------------- */
+/* 10. Hasil: preview citra & badge kualitas ------------------------ */
 
 .image-frame {
   display: flex;
@@ -714,9 +720,9 @@ textarea.key-display {
 }
 
 /* Info developer: rangkuman teknis tiap proses (dimensi/ukuran citra,
- ukuran payload, status tiap tahap) untuk keperluan dokumentasi/pengujian,
- disembunyikan default lewat <details> supaya tidak mengganggu pengguna
- awam yang cuma butuh hasil akhirnya. */
+ ukuran payload, status tiap tahap) untuk keperluan
+ dokumentasi/pengujian, disembunyikan default lewat <details> supaya
+ tidak mengganggu pengguna awam yang cuma butuh hasil akhirnya. */
 .dev-info summary {
   cursor: pointer;
   font-family: var(--font-mono);
@@ -791,7 +797,7 @@ textarea.key-display {
   color: var(--color-error-text);
 }
 
-/* 11. Flash messages --------------------------------------------------- */
+/* 11. Flash messages ----------------------------------------------- */
 
 .flash-messages {
   max-width: var(--content-max);
@@ -821,7 +827,7 @@ textarea.key-display {
   border-left: 3px solid var(--color-success-text);
 }
 
-/* 12. Footer ----------------------------------------------------------- */
+/* 12. Footer ------------------------------------------------------- */
 
 .site-footer {
   padding-block: var(--space-4);
@@ -834,7 +840,7 @@ textarea.key-display {
   text-align: center;
 }
 
-/* 13. Breakpoint tablet (min-width: 640px) ----------------------------- */
+/* 13. Breakpoint tablet (min-width: 640px) ------------------------- */
 
 @media (min-width: 640px) {
   .nav-toggle {
@@ -884,7 +890,7 @@ textarea.key-display {
   }
 }
 
-/* 14. Breakpoint desktop (min-width: 1024px) --------------------------- */
+/* 14. Breakpoint desktop (min-width: 1024px) ----------------------- */
 
 @media (min-width: 1024px) {
   .container {

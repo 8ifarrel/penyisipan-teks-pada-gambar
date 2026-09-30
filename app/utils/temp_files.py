@@ -1,16 +1,18 @@
 # Penyimpanan sementara citra stego di disk.
 #
-# Citra STEGO hasil penyisipan disimpan sebagai file PNG di folder temporer
-# (`<instance_path>/tmp_stego/`) dengan nama acak (UUID4) agar bisa
-# disajikan kembali lewat route pratinjau & unduh pada halaman hasil (butuh
-# permintaan GET terpisah untuk <img> dan tombol unduh, sehingga tidak
-# cukup hanya disimpan di memori selama satu request POST saja).
+# Citra STEGO hasil penyisipan disimpan sebagai file PNG di folder
+# temporer (`<instance_path>/tmp_stego/`) dengan nama acak (UUID4)
+# agar bisa disajikan kembali lewat route pratinjau & unduh pada
+# halaman hasil (butuh permintaan GET terpisah untuk <img> dan tombol
+# unduh, sehingga tidak cukup hanya disimpan di memori selama satu
+# request POST saja).
 #
-# Karena aplikasi ini tidak menjalankan scheduler/cron di latar belakang,
-# file temporer dibersihkan secara "lazy": setiap kali route yang berpotensi
-# membuat atau menyajikan file temporer dipanggil, file yang lebih tua dari
-# TEMP_FILE_MAX_AGE_SECONDS dihapus terlebih dahulu. Ini cukup untuk
-# skenario pemakaian skala kecil dan mencegah folder menumpuk tanpa batas.
+# Karena aplikasi ini tidak menjalankan scheduler/cron di latar
+# belakang, file temporer dibersihkan secara "lazy": setiap kali route
+# yang berpotensi membuat atau menyajikan file temporer dipanggil, file
+# yang lebih tua dari TEMP_FILE_MAX_AGE_SECONDS dihapus terlebih
+# dahulu. Ini cukup untuk skenario pemakaian skala kecil dan mencegah
+# folder menumpuk tanpa batas.
 
 import os
 import re
@@ -51,7 +53,9 @@ def cleanup_old_temp_files() -> None:
 
 
 def save_stego_image(stego_image: Image.Image) -> str:
-  """Menyimpan citra stego ke folder temporer, mengembalikan file_id-nya."""
+  """
+  Menyimpan citra stego ke folder temporer, mengembalikan file_id-nya.
+  """
   file_id = f"{uuid.uuid4().hex}.png"
   save_png(stego_image, os.path.join(temp_dir(), file_id))
   return file_id

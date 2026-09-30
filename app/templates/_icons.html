@@ -1,7 +1,7 @@
-{# Kumpulan ikon SVG inline sederhana (garis/stroke, 24x24), dipakai lewat
- {% from "_icons.html" import icon_... %} di template lain. Inline SVG
- dipilih alih-alih icon font/library eksternal agar tetap ringan dan
- berfungsi offline. #}
+{# Kumpulan ikon SVG inline sederhana (garis/stroke, 24x24), dipakai
+ lewat {% from "_icons.html" import icon_... %} di template lain.
+ Inline SVG dipilih alih-alih icon font/library eksternal agar tetap
+ ringan dan berfungsi offline. #}
 
 {% macro icon_upload() %}
 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -70,11 +70,11 @@
 </svg>
 {% endmacro %}
 
-{# Ilustrasi garis abstrak untuk hero beranda: bingkai foto dengan lencana
- amplop kecil di sudut, merepresentasikan "teks pesan tersembunyi di
- dalam citra" tanpa perlu aset gambar eksternal. Warna mengikuti
- currentColor (aksen), latar lencana memakai var(--color-bg) agar
- menimpa garis bingkai di baliknya. #}
+{# Ilustrasi garis abstrak untuk hero beranda: bingkai foto dengan
+ lencana amplop kecil di sudut, merepresentasikan "teks pesan
+ tersembunyi di dalam citra" tanpa perlu aset gambar eksternal. Warna
+ mengikuti currentColor (aksen), latar lencana memakai var(--color-bg)
+ agar menimpa garis bingkai di baliknya. #}
 {% macro illustration_hero() %}
 <svg class="hero-illustration" viewBox="0 0 96 96" fill="none"
   stroke="currentColor" stroke-width="2.5" stroke-linecap="round"

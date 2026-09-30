@@ -1,26 +1,26 @@
 {% from "_icons.html" import icon_copy %}
 
-{# Panel "Info Developer": rangkuman teknis proses sisip/ekstraksi, dipakai
- bersama oleh halaman form (embed.html, extract.html) dan halaman hasil
- (embed_result.html, extract_result.html). dev_info diisi progresif oleh
- app/services/embed_service.py & extract_service.py; field yang belum
- terisi tetap bernilai "-".
+{# Panel "Info Developer": rangkuman teknis proses sisip/ekstraksi,
+ dipakai bersama oleh halaman form (embed.html, extract.html) dan
+ halaman hasil (embed_result.html, extract_result.html). dev_info diisi
+ progresif oleh app/services/embed_service.py & extract_service.py;
+ field yang belum terisi tetap bernilai "-".
 
  Field yang bisa dihitung penuh di sisi klien (ukuran & dimensi berkas,
- ukuran teks, perkiraan ukuran payload, kapasitas citra) diberi id="dev-..."
- dan diperbarui langsung lewat JS (lihat initDevInfoLive() di main.js)
- sebelum form disubmit. Field yang butuh proses di server (status
- enkripsi/penyisipan/ekstraksi/dekripsi, PSNR, ukuran citra stego) tidak
- diberi id, tetap "-" sampai form disubmit.
+ ukuran teks, perkiraan ukuran payload, kapasitas citra) diberi
+ id="dev-..." dan diperbarui langsung lewat JS (lihat initDevInfoLive()
+ di main.js) sebelum form disubmit. Field yang butuh proses di server
+ (status enkripsi/penyisipan/ekstraksi/dekripsi, PSNR, ukuran citra
+ stego) tidak diberi id, tetap "-" sampai form disubmit.
 
  _dev_value() menampilkan tiap nilai lengkap dengan tombol salin (ikon
- saja).
- Nilai yang berformat "A (B)" (hasil format_size() di
+ saja). Nilai yang berformat "A (B)" (hasil format_size() di
  app/utils/formatting.py, mis. "12,300 KB (12.300 B)") dipecah jadi dua
  bagian yang masing-masing punya tombol salin sendiri. #}
 
 {% macro _dev_copy_btn(value) %}
-<button type="button" class="dev-info__copy" data-copy-value="{{ value }}"
+<button type="button" class="dev-info__copy"
+  data-copy-value="{{ value }}"
   title="Salin {{ value }}" aria-label="Salin {{ value }}">
   {{- icon_copy() -}}
 </button>
@@ -52,9 +52,13 @@
     <dt>Ukuran Teks Asli</dt>
     <dd id="dev-text-size">{{ _dev_value(dev_info.text_size) }}</dd>
     <dt>Ukuran Payload</dt>
-    <dd id="dev-payload-size">{{ _dev_value(dev_info.payload_size) }}</dd>
+    <dd id="dev-payload-size">
+      {{- _dev_value(dev_info.payload_size) -}}
+    </dd>
     <dt>Kapasitas Citra</dt>
-    <dd id="dev-capacity-bits">{{ _dev_value(dev_info.capacity_bits) }}</dd>
+    <dd id="dev-capacity-bits">
+      {{- _dev_value(dev_info.capacity_bits) -}}
+    </dd>
     <dt>Status Kapasitas</dt>
     <dd id="dev-capacity-status">
       {{- _dev_value(dev_info.capacity_status) -}}

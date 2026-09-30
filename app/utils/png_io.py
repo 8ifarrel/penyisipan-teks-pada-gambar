@@ -1,16 +1,16 @@
-# Penyimpanan PNG yang menyesuaikan (adaptif) karakteristik encoder citra
-# cover aslinya, bukan dipukul rata ke satu profil tertentu:
-#   - Level kompresi zlib: tidak pernah tersimpan sebagai field di file PNG
-#     mana pun (murni pengaturan encoder saat menyimpan), jadi ditebak lewat
-#     pick_compress_level() dengan membandingkan ukuran hasil kompresi di
-#     tiap level ke ukuran total IDAT citra sumber.
-#   - Ukuran potongan (chunking) IDAT: encoder berbeda memecah data hasil
-#     kompresi jadi beberapa chunk IDAT dengan ukuran buffer internal yang
-#     berbeda-beda (mis. Pillow 65536 byte, libpng 8192 byte). Ukuran ini
-#     dideteksi dari citra sumber lewat
+# Penyimpanan PNG yang menyesuaikan (adaptif) karakteristik encoder
+# citra cover aslinya, bukan dipukul rata ke satu profil tertentu:
+#   - Level kompresi zlib: tidak pernah tersimpan sebagai field di
+#     file PNG mana pun (murni pengaturan encoder saat menyimpan), jadi
+#     ditebak lewat pick_compress_level() dengan membandingkan ukuran
+#     hasil kompresi di tiap level ke ukuran total IDAT citra sumber.
+#   - Ukuran potongan (chunking) IDAT: encoder berbeda memecah data
+#     hasil kompresi jadi beberapa chunk IDAT dengan ukuran buffer
+#     internal yang berbeda-beda (mis. Pillow 65536 byte, libpng 8192
+#     byte). Ukuran ini dideteksi dari citra sumber lewat
 #     remember_source_compression_profile() dan diterapkan ulang saat
-#     menyimpan lewat _idat_chunk_size(), supaya jumlah/ukuran chunk IDAT
-#     citra hasil mengikuti citra sumbernya.
+#     menyimpan lewat _idat_chunk_size(), supaya jumlah/ukuran chunk
+#     IDAT citra hasil mengikuti citra sumbernya.
 
 import contextlib
 import io
@@ -25,8 +25,9 @@ PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 # lewat pick_compress_level() untuk menyesuaikan level kompresi.
 SOURCE_IDAT_TOTAL_BYTES_KEY = "_source_idat_total_bytes"
 
-# Key pada image.info tempat ukuran buffer IDAT citra cover asli disimpan,
-# dibaca save_png() untuk menyesuaikan ukuran potongan chunk IDAT.
+# Key pada image.info tempat ukuran buffer IDAT citra cover asli
+# disimpan, dibaca save_png() untuk menyesuaikan ukuran potongan chunk
+# IDAT.
 SOURCE_IDAT_CHUNK_SIZE_KEY = "_source_idat_chunk_size"
 
 DEFAULT_COMPRESS_LEVEL = 6  # level kompresi zlib bawaan Pillow
@@ -35,8 +36,9 @@ DEFAULT_COMPRESS_LEVEL = 6  # level kompresi zlib bawaan Pillow
 def _iter_chunks(png_bytes: bytes):
   """
   Iterasi tiap chunk pada bytes mentah sebuah file PNG, menghasilkan
-  (tipe chunk, panjang data chunk, offset awal chunk). Tidak menghasilkan
-  apa-apa jika bytes bukan diawali signature PNG yang valid.
+  (tipe chunk, panjang data chunk, offset awal chunk). Tidak
+  menghasilkan apa-apa jika bytes bukan diawali signature PNG yang
+  valid.
   """
   if png_bytes[:8] != PNG_SIGNATURE:
     return
@@ -54,15 +56,17 @@ def remember_source_compression_profile(
   image: Image.Image, raw_bytes: bytes
 ) -> None:
   """
-  Merekam profil kompresi PNG citra asli ke image.info, dibaca save_png()
-  supaya citra hasil mengikuti karakteristik encoder sumbernya:
-    - SOURCE_IDAT_TOTAL_BYTES_KEY: ukuran total seluruh chunk IDAT, dipakai
-      pick_compress_level() untuk menyesuaikan level kompresi.
-    - SOURCE_IDAT_CHUNK_SIZE_KEY: ukuran buffer chunk IDAT (byte terbesar
-      di antara seluruh chunk IDAT), dipakai _idat_chunk_size() untuk
-      menyesuaikan jumlah/ukuran potongan chunk IDAT. Hanya diisi jika
-      citra sumber punya lebih dari satu chunk IDAT (ukuran buffer encoder
-      sumber tidak bisa disimpulkan dari satu chunk saja).
+  Merekam profil kompresi PNG citra asli ke image.info, dibaca
+  save_png() supaya citra hasil mengikuti karakteristik encoder
+  sumbernya:
+    - SOURCE_IDAT_TOTAL_BYTES_KEY: ukuran total seluruh chunk IDAT,
+      dipakai pick_compress_level() untuk menyesuaikan level kompresi.
+    - SOURCE_IDAT_CHUNK_SIZE_KEY: ukuran buffer chunk IDAT (byte
+      terbesar di antara seluruh chunk IDAT), dipakai
+      _idat_chunk_size() untuk menyesuaikan jumlah/ukuran potongan
+      chunk IDAT. Hanya diisi jika citra sumber punya lebih dari satu
+      chunk IDAT (ukuran buffer encoder sumber tidak bisa disimpulkan
+      dari satu chunk saja).
   Tidak melakukan apa-apa jika raw_bytes bukan PNG valid.
   """
   idat_lengths = [
@@ -80,9 +84,10 @@ def remember_source_compression_profile(
 @contextlib.contextmanager
 def _idat_chunk_size(chunk_size):
   """
-  Mengganti sementara ukuran buffer yang dipakai Pillow untuk memecah data
-  IDAT terkompresi menjadi beberapa chunk saat menyimpan PNG (dikembalikan
-  ke nilai semula setelah blok `with` selesai, termasuk jika terjadi error).
+  Mengganti sementara ukuran buffer yang dipakai Pillow untuk memecah
+  data IDAT terkompresi menjadi beberapa chunk saat menyimpan PNG
+  (dikembalikan ke nilai semula setelah blok `with` selesai, termasuk
+  jika terjadi error).
   """
   original = ImageFile.MAXBLOCK
   ImageFile.MAXBLOCK = chunk_size
@@ -92,7 +97,9 @@ def _idat_chunk_size(chunk_size):
     ImageFile.MAXBLOCK = original
 
 
-def _idat_bytes_at_level(image: Image.Image, compress_level: int) -> int:
+def _idat_bytes_at_level(
+  image: Image.Image, compress_level: int
+) -> int:
   """
   Menghitung total ukuran byte seluruh chunk IDAT pada level kompresi
   tertentu.
@@ -108,10 +115,11 @@ def _idat_bytes_at_level(image: Image.Image, compress_level: int) -> int:
 
 def pick_compress_level(image: Image.Image, target_idat_bytes) -> int:
   """
-  Mencari level kompresi zlib Pillow (0-9) yang menghasilkan ukuran total
-  chunk IDAT paling mendekati target_idat_bytes (ukuran IDAT citra cover
-  asli), supaya ukuran citra stego mengikuti karakteristik kompresi
-  encoder sumbernya, bukan dipukul rata ke satu level tertentu.
+  Mencari level kompresi zlib Pillow (0-9) yang menghasilkan ukuran
+  total chunk IDAT paling mendekati target_idat_bytes (ukuran IDAT
+  citra cover asli), supaya ukuran citra stego mengikuti karakteristik
+  kompresi encoder sumbernya, bukan dipukul rata ke satu level
+  tertentu.
 
   Args:
     target_idat_bytes: ukuran total IDAT citra sumber dalam byte, atau

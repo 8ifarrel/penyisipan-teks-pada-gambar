@@ -2,18 +2,18 @@
 # rendah).
 # 
 # Aturan penyisipan:
-#   - Disisipkan pada bit ke-0 tiap kanal warna (R, G, B) secara berurutan,
-#     dimulai dari piksel pertama hingga piksel terakhir.
+#   - Disisipkan pada bit ke-0 tiap kanal warna (R, G, B) secara
+#     berurutan, dimulai dari piksel pertama hingga piksel terakhir.
 #   - Kapasitas maksimum: C = W x H x c  (c = 3 kanal warna). Karena k=1
-#     (satu bit LSB per kanal), kapasitas dalam satuan "kanal" persis sama
-#     dengan kapasitas dalam satuan bit.
+#     (satu bit LSB per kanal), kapasitas dalam satuan "kanal" persis
+#     sama dengan kapasitas dalam satuan bit.
 #   - Penggantian bit LSB untuk k=1:
 #         x'_i = x_i - (x_i mod 2) + m_i
 #     yang secara bitwise setara dengan: x'_i = (x_i & ~1) | m_i
 # 
-# Library yang digunakan: Pillow (PIL.Image) untuk baca/tulis citra PNG RGB
-# 24-bit, dan numpy untuk operasi bit secara vectorized (penting agar tetap
-# efisien pada citra berukuran besar).
+# Library yang digunakan: Pillow (PIL.Image) untuk baca/tulis citra PNG
+# RGB 24-bit, dan numpy untuk operasi bit secara vectorized (penting
+# agar tetap efisien pada citra berukuran besar).
 
 import struct
 
@@ -24,15 +24,20 @@ from app.stego.payload import HEADER_LEN_BYTES, HEADER_STRUCT_FORMAT
 
 CHANNELS = 3  # RGB
 BITS_PER_BYTE = 8
-LSB_MASK = 0xFE  # ...11111110, untuk menghapus bit ke-0 (bit paling rendah)
+# ...11111110, untuk menghapus bit ke-0 (bit paling rendah)
+LSB_MASK = 0xFE
 
 
 class ImageValidationError(Exception):
-  """Dilempar jika citra bukan berformat PNG dan/atau bukan RGB 24-bit."""
+  """
+  Dilempar jika citra bukan berformat PNG dan/atau bukan RGB 24-bit.
+  """
 
 
 class CapacityError(Exception):
-  """Dilempar jika kapasitas citra tidak cukup untuk menampung payload."""
+  """
+  Dilempar jika kapasitas citra tidak cukup untuk menampung payload.
+  """
 
 
 def validate_png_rgb24(image: Image.Image) -> None:
@@ -41,7 +46,8 @@ def validate_png_rgb24(image: Image.Image) -> None:
   (3 kanal warna, 8 bit per kanal).
 
   Raises:
-    ImageValidationError: jika salah satu syarat di atas tidak terpenuhi.
+    ImageValidationError: jika salah satu syarat di atas tidak
+      terpenuhi.
   """
   if image.format != "PNG" or image.mode != "RGB":
     raise ImageValidationError(
@@ -63,12 +69,15 @@ def calculate_capacity(
     channels: jumlah kanal warna pada piksel (default 3, RGB).
 
   Returns:
-    Kapasitas penyisipan maksimum dalam bit (karena k=1 bit LSB per kanal).
+    Kapasitas penyisipan maksimum dalam bit (karena k=1 bit LSB per
+    kanal).
   """
   return width * height * channels
 
 
-def embed_payload(cover_image: Image.Image, payload: bytes) -> Image.Image:
+def embed_payload(
+  cover_image: Image.Image, payload: bytes
+) -> Image.Image:
   """
   Menyisipkan payload ke dalam citra cover menggunakan metode LSB.
 
@@ -92,7 +101,8 @@ def embed_payload(cover_image: Image.Image, payload: bytes) -> Image.Image:
     PIL.Image (mode "RGB") berisi citra stego.
 
   Raises:
-    ImageValidationError: jika citra bukan PNG dan/atau bukan RGB 24-bit.
+    ImageValidationError: jika citra bukan PNG dan/atau bukan RGB
+      24-bit.
     CapacityError: jika kapasitas citra cover tidak cukup untuk payload.
   """
   validate_png_rgb24(cover_image)
@@ -104,14 +114,17 @@ def embed_payload(cover_image: Image.Image, payload: bytes) -> Image.Image:
   if capacity_bits < payload_bits_len:
     raise CapacityError(
       f"Kapasitas citra tidak cukup untuk menyisipkan payload ini "
-      f"(kapasitas {capacity_bits} bit, payload {payload_bits_len} bit)."
+      f"(kapasitas {capacity_bits} bit, "
+      f"payload {payload_bits_len} bit)."
     )
 
-  pixel_array = np.array(cover_image, dtype=np.uint8)  # shape: (H, W, 3)
+  # shape: (H, W, 3)
+  pixel_array = np.array(cover_image, dtype=np.uint8)
   # deret kanal R,G,B,R,G,B,...
   flat_channels = pixel_array.reshape(-1).copy()
 
-  # MSB-first per byte agar konsisten dengan urutan pada extract_payload().
+  # MSB-first per byte agar konsisten dengan urutan pada
+  # extract_payload().
   payload_bits = np.unpackbits(np.frombuffer(payload, dtype=np.uint8))
 
   n = payload_bits.shape[0]
@@ -131,8 +144,8 @@ def extract_payload(stego_image: Image.Image) -> bytes:
    2. Baca citra stego sebagai deret kanal warna berurutan
    3. Ekstraksi 32 bit LSB pertama (4 byte) -> rekonstruksi header
     (panjang payload)
-   4. Ekstraksi bit LSB sejumlah (panjang_payload_total x 8) bit, termasuk
-    32 bit header yang sudah diambil di awal
+   4. Ekstraksi bit LSB sejumlah (panjang_payload_total x 8) bit,
+    termasuk 32 bit header yang sudah diambil di awal
    5. Rekonstruksi seluruh bit menjadi bytes payload lengkap
 
   Args:
@@ -143,7 +156,8 @@ def extract_payload(stego_image: Image.Image) -> bytes:
     bytes payload lengkap (header + nonce + tag + ciphertext).
 
   Raises:
-    ImageValidationError: jika citra bukan PNG dan/atau bukan RGB 24-bit.
+    ImageValidationError: jika citra bukan PNG dan/atau bukan RGB
+      24-bit.
     CapacityError: jika citra terlalu kecil untuk memuat header atau
       payload sepanjang yang dinyatakan pada header.
   """
@@ -154,7 +168,9 @@ def extract_payload(stego_image: Image.Image) -> bytes:
 
   header_bits_len = HEADER_LEN_BYTES * BITS_PER_BYTE  # 32 bit
   if flat_channels.shape[0] < header_bits_len:
-    raise CapacityError("Citra terlalu kecil untuk memuat header payload.")
+    raise CapacityError(
+      "Citra terlalu kecil untuk memuat header payload."
+    )
 
   header_bits = (flat_channels[:header_bits_len] & 1).astype(np.uint8)
   header_bytes = np.packbits(header_bits).tobytes()

@@ -1,8 +1,10 @@
-# Unit test untuk modul app.metrics.quality (MSE, PSNR, kategori kualitas).
+# Unit test untuk modul app.metrics.quality (MSE, PSNR, kategori
+# kualitas).
 #
-# Nilai ekspektasi pada test MSE/PSNR dihitung manual (dengan tangan atau
-# rumus MSE/PSNR langsung via `math`), bukan dengan memanggil ulang fungsi
-# yang diuji, agar benar-benar independen dari implementasi.
+# Nilai ekspektasi pada test MSE/PSNR dihitung manual (dengan tangan
+# atau rumus MSE/PSNR langsung via `math`), bukan dengan memanggil
+# ulang fungsi yang diuji, agar benar-benar independen dari
+# implementasi.
 
 import math
 
@@ -44,7 +46,8 @@ class TestCalculateMse:
     assert calculate_mse(cover, stego) == pytest.approx(expected_mse)
 
   def test_manual_max_difference(self):
-    # Cover seluruhnya 0, stego seluruhnya 255 -> beda maksimum tiap elemen.
+    # Cover seluruhnya 0, stego seluruhnya 255 -> beda maksimum tiap
+    # elemen.
     cover_array = np.zeros((2, 2, 3), dtype=np.uint8)
     stego_array = np.full((2, 2, 3), 255, dtype=np.uint8)
 
@@ -119,7 +122,8 @@ class TestCategorizeQuality:
       (30.0, "Kualitas citra stego masih bisa diterima"),
       (30.0001, "Kualitas citra stego baik"),
       (35.0, "Kualitas citra stego baik"),
-      (float("inf"), "Kualitas citra stego baik"),  # citra identik sempurna
+      # citra identik sempurna
+      (float("inf"), "Kualitas citra stego baik"),
     ],
   )
   def test_category_thresholds(self, psnr, expected_category):
@@ -148,8 +152,11 @@ class TestEndToEnd:
     # merepresentasikan skenario nyata penyisipan LSB.
     rng = np.random.default_rng(1)
     cover_array = rng.integers(0, 256, size=(32, 32, 3), dtype=np.uint8)
-    # Simulasikan penyisipan LSB: ganti bit ke-0 tiap elemen (beda maks 1).
-    lsb_bits = rng.integers(0, 2, size=cover_array.shape, dtype=np.uint8)
+    # Simulasikan penyisipan LSB: ganti bit ke-0 tiap elemen (beda
+    # maks 1).
+    lsb_bits = rng.integers(
+      0, 2, size=cover_array.shape, dtype=np.uint8
+    )
     stego_array = (cover_array & 0xFE) | lsb_bits
 
     cover = _image_from_array(cover_array)
