@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initDevInfoLive();
 });
 
-// --- Tombol "Salin" (kunci AES / teks hasil ekstraksi) ---------------
+// --- Tombol "Salin" (kunci AES / teks hasil ekstraksi) --------------
 
 function initCopyButtons() {
   document.addEventListener("click", function (event) {
@@ -111,7 +111,7 @@ function initCopyButtons() {
   });
 }
 
-// --- Menu navigasi (hamburger di mobile) -----------------------------
+// --- Menu navigasi (hamburger di mobile) ----------------------------
 
 function initNavToggle() {
   const toggle = document.getElementById("nav-toggle");
@@ -136,14 +136,14 @@ function initNavToggle() {
   });
 }
 
-// --- Area unggah drag-and-drop ---------------------------------------
+// --- Area unggah drag-and-drop --------------------------------------
 //
 // Elemen <input type="file"> pada .dropzone sengaja tetap ada dan
 // berfungsi penuh (diposisikan menutupi seluruh area lewat CSS).
 // Drag-and-drop file ke atasnya sudah didukung langsung oleh browser
 // tanpa JS tambahan. Skrip ini hanya menambahkan feedback visual
-// (highlight saat drag, nama file terpilih) supaya area tersebut terasa
-// interaktif.
+// (highlight saat drag, nama file terpilih) supaya area tersebut
+// terasa interaktif.
 
 function initDropzones() {
   document.querySelectorAll(".dropzone").forEach(function (dropzone) {
@@ -188,7 +188,7 @@ function initDropzones() {
   });
 }
 
-// --- Panel "Info Developer": info langsung sebelum form disubmit -----
+// --- Panel "Info Developer": info langsung sebelum form disubmit ----
 //
 // Sebagian field pada panel Info Developer (ukuran & dimensi foto,
 // ukuran teks, perkiraan ukuran payload, kapasitas citra) dihitung di
@@ -197,8 +197,8 @@ function initDropzones() {
 // _dev_info.html adalah target pembaruannya.
 
 // Overhead payload tetap: header (4 byte) + nonce (12 byte) +
-// authentication tag (16 byte) AES-GCM, mengikuti struktur payload pada
-// app/stego/payload.py.
+// authentication tag (16 byte) AES-GCM, mengikuti struktur payload
+// pada app/stego/payload.py.
 const DEV_INFO_PAYLOAD_OVERHEAD_BYTES = 32;
 
 // SVG identik dengan macro icon_copy() di _icons.html, dipakai ulang
@@ -222,8 +222,9 @@ function escapeHtml(str) {
 }
 
 // Format bilangan bulat/desimal mengikuti konvensi penulisan angka
-// Indonesia (titik pemisah ribuan, koma pemisah desimal), setara dengan
-// format_id_int()/format_id_decimal() di app/utils/formatting.py.
+// Indonesia (titik pemisah ribuan, koma pemisah desimal), setara
+// dengan format_id_int()/format_id_decimal() di
+// app/utils/formatting.py.
 function formatIdInt(value) {
   return value.toLocaleString("id-ID");
 }

@@ -36,9 +36,9 @@ Mulawarman.
 2. **Pembentukan payload**: nonce, tag, dan ciphertext digabung menjadi
    satu payload biner dengan header 4-byte (big-endian) penanda panjang
    total payload.
-3. **Penyisipan LSB**: setiap bit payload disisipkan ke bit paling tidak
-   signifikan tiap kanal warna (R, G, B) citra, dimulai dari piksel
-   pertama.
+3. **Penyisipan LSB**: setiap bit payload disisipkan ke bit paling
+   tidak signifikan tiap kanal warna (R, G, B) citra, dimulai dari
+   piksel pertama.
 4. **Ukur kualitas**: citra asli & citra hasil dibandingkan lewat MSE
    dan PSNR.
 5. **Ekstraksi & dekripsi**: proses sebaliknya, bit LSB dibaca dari

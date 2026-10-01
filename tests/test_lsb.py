@@ -3,8 +3,8 @@
 #
 # Mencakup:
 #   - round-trip penyisipan lalu ekstraksi mengembalikan payload yang
-#     identik (diuji end-to-end dengan payload sungguhan hasil AES-GCM +
-#     build_payload)
+#     identik (diuji end-to-end dengan payload sungguhan hasil
+#     AES-GCM + build_payload)
 #   - exception muncul dengan benar saat kapasitas citra kurang
 #   - exception muncul dengan benar saat citra bukan PNG/RGB 24-bit
 
@@ -175,9 +175,9 @@ class TestCapacityError:
       extract_payload(tiny_image)
 
   def test_extract_raises_when_header_claims_more_than_available(self):
-    # Sisipkan payload valid ke citra pas-pasan, lalu potong citra stego
-    # (memangkas piksel) sehingga header menyatakan panjang payload yang
-    # tidak lagi bisa dipenuhi oleh sisa data pada citra.
+    # Sisipkan payload valid ke citra pas-pasan, lalu potong citra
+    # stego (memangkas piksel) sehingga header menyatakan panjang
+    # payload yang tidak lagi bisa dipenuhi oleh sisa data pada citra.
     payload = _real_payload("p")
     payload_bits_len = len(payload) * 8
     # Kapasitas hanya cukup untuk payload ini persis (tanpa piksel
@@ -190,8 +190,8 @@ class TestCapacityError:
     stego_array = np.array(stego, dtype=np.uint8)
 
     # Potong citra stego menjadi 1x1 piksel (hanya 3 kanal tersisa),
-    # sehingga header (yang menyatakan payload jauh lebih panjang) tidak
-    # lagi bisa dipenuhi.
+    # sehingga header (yang menyatakan payload jauh lebih panjang)
+    # tidak lagi bisa dipenuhi.
     truncated_array = stego_array[:1, :1, :]
     truncated_image = Image.fromarray(truncated_array, mode="RGB")
 

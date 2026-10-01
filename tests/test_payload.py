@@ -61,7 +61,9 @@ class TestBuildPayload:
 
 class TestParsePayload:
   @pytest.mark.parametrize("ciphertext_len", [0, 1, 20, 5000])
-  def test_round_trip_returns_original_components(self, ciphertext_len):
+  def test_round_trip_returns_original_components(
+    self, ciphertext_len
+  ):
     nonce, tag, ciphertext = _sample_components(
       ciphertext_len=ciphertext_len
     )

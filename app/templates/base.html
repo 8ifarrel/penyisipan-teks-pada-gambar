@@ -2,9 +2,12 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
   {% set app_name = "Penyisipan Teks pada Gambar" %}
-  <title>{% block title %}Beranda{% endblock %} - {{ app_name }}</title>
+  <title>
+    {%- block title %}Beranda{% endblock %} - {{ app_name -}}
+  </title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   {% set google_fonts_url = "https://fonts.googleapis.com/css2"
@@ -76,6 +79,7 @@
     </div>
   </footer>
 
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script
+    src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

@@ -88,8 +88,8 @@ def handle_submit():
   except ValueError:
     flash(
       "Kunci AES tidak valid: harus berupa string heksadesimal "
-      f"({KEY_LEN_BYTES * 2} karakter, mis. hasil salinan dari halaman "
-      "hasil penyisipan).",
+      f"({KEY_LEN_BYTES * 2} karakter, mis. hasil salinan dari "
+      "halaman hasil penyisipan).",
       "error",
     )
     return render_template("extract.html", dev_info=dev_info), 400

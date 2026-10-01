@@ -2,7 +2,8 @@
 #
 # Mencakup:
 #   (a) round-trip enkripsi-dekripsi menghasilkan teks yang sama persis
-#   (b) dekripsi dengan authentication tag yang salah gagal dengan benar
+#   (b) dekripsi dengan authentication tag yang salah gagal dengan
+#       benar
 #   (c) panjang key dan nonce yang dihasilkan selalu benar (16 byte,
 #       12 byte)
 
@@ -56,7 +57,9 @@ class TestEncryptText:
       "A" * 5000,  # teks panjang
     ],
   )
-  def test_encrypt_produces_correctly_sized_components(self, plaintext):
+  def test_encrypt_produces_correctly_sized_components(
+    self, plaintext
+  ):
     result = encrypt_text(plaintext)
 
     assert len(result["key"]) == KEY_LEN_BYTES
@@ -175,7 +178,9 @@ class TestAuthenticationFailure:
       bytes([encrypted["tag"][0] ^ 0xFF]) + encrypted["tag"][1:]
     )
 
-    with pytest.raises(AuthenticationError, match="Authentication tag"):
+    with pytest.raises(
+      AuthenticationError, match="Authentication tag"
+    ):
       decrypt_ciphertext(
         key=encrypted["key"],
         nonce=encrypted["nonce"],

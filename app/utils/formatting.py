@@ -21,7 +21,8 @@ def format_id_decimal(value: float, decimals: int) -> str:
   (mis. 12300.232 -> "12.300,232").
   """
   formatted = f"{value:,.{decimals}f}"
-  return formatted.replace(",", "X").replace(".", ",").replace("X", ".")
+  swapped = formatted.replace(",", "X").replace(".", ",")
+  return swapped.replace("X", ".")
 
 
 def format_size(num_bytes: int) -> str:

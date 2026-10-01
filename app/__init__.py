@@ -1,7 +1,7 @@
 # Flask application factory.
 #
-# Menyatukan seluruh modul (crypto, stego, metrics, routes) menjadi satu
-# aplikasi Flask.
+# Menyatukan seluruh modul (crypto, stego, metrics, routes) menjadi
+# satu aplikasi Flask.
 
 import os
 import secrets

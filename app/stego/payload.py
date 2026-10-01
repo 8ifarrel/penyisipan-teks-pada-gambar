@@ -19,13 +19,16 @@ HEADER_LEN_BYTES = 4
 HEADER_STRUCT_FORMAT = ">I"  # unsigned integer, 4 byte, big-endian
 
 
-def build_payload(nonce: bytes, tag: bytes, ciphertext: bytes) -> bytes:
+def build_payload(
+  nonce: bytes, tag: bytes, ciphertext: bytes
+) -> bytes:
   """
   Membentuk payload dari komponen hasil enkripsi AES-GCM.
 
   Alur:
    1. Hitung panjang ciphertext
-   2. Hitung panjang payload = |header| + |nonce| + |tag| + |ciphertext|
+   2. Hitung panjang payload =
+    |header| + |nonce| + |tag| + |ciphertext|
    3. Bentuk header (unsigned integer, 4 byte) berisi panjang payload
    4. Satukan header, nonce, authentication tag, dan ciphertext
 
@@ -54,7 +57,8 @@ def build_payload(nonce: bytes, tag: bytes, ciphertext: bytes) -> bytes:
     )
 
   payload_length = (
-    HEADER_LEN_BYTES + NONCE_LEN_BYTES + TAG_LEN_BYTES + len(ciphertext)
+    HEADER_LEN_BYTES + NONCE_LEN_BYTES + TAG_LEN_BYTES
+    + len(ciphertext)
   )
   header = struct.pack(HEADER_STRUCT_FORMAT, payload_length)
 
@@ -70,7 +74,8 @@ def parse_payload(payload: bytes) -> dict:
    1. Baca 4 byte pertama sebagai header -> panjang total payload
    2. Ambil 12 byte berikutnya sebagai nonce
    3. Ambil 16 byte berikutnya sebagai authentication tag
-   4. Hitung panjang ciphertext = panjang_payload - header - nonce - tag
+   4. Hitung panjang ciphertext =
+    panjang_payload - header - nonce - tag
    5. Ambil sisa byte sebagai ciphertext
 
   Args:

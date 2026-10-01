@@ -38,8 +38,8 @@ def temp_dir() -> str:
 def cleanup_old_temp_files() -> None:
   """
   Menghapus file citra stego sementara yang lebih tua dari
-  TEMP_FILE_MAX_AGE_SECONDS, agar folder temporer tidak menumpuk seiring
-  waktu.
+  TEMP_FILE_MAX_AGE_SECONDS, agar folder temporer tidak menumpuk
+  seiring waktu.
   """
   directory = temp_dir()
   now = time.time()
@@ -63,8 +63,8 @@ def save_stego_image(stego_image: Image.Image) -> str:
 
 def resolve_temp_file_path(file_id: str) -> str:
   """
-  Memvalidasi format file_id (mencegah path traversal, mis. "../../etc")
-  dan mengembalikan path absolut file tersebut jika ada.
+  Memvalidasi format file_id (mencegah path traversal, mis.
+  "../../etc") dan mengembalikan path absolut file tersebut jika ada.
 
   Aborts:
     404: jika file_id berformat tidak valid atau file tidak ditemukan.

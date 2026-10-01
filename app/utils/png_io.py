@@ -21,8 +21,9 @@ from PIL import Image, ImageFile
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
 # Key pada image.info tempat ukuran total chunk IDAT citra cover asli
-# disimpan oleh remember_source_compression_profile(), dibaca save_png()
-# lewat pick_compress_level() untuk menyesuaikan level kompresi.
+# disimpan oleh remember_source_compression_profile(), dibaca
+# save_png() lewat pick_compress_level() untuk menyesuaikan level
+# kompresi.
 SOURCE_IDAT_TOTAL_BYTES_KEY = "_source_idat_total_bytes"
 
 # Key pada image.info tempat ukuran buffer IDAT citra cover asli
@@ -124,8 +125,8 @@ def pick_compress_level(image: Image.Image, target_idat_bytes) -> int:
   Args:
     target_idat_bytes: ukuran total IDAT citra sumber dalam byte, atau
       None jika tidak diketahui (mis. citra tidak berasal dari upload
-      PNG asli). Jika None, DEFAULT_COMPRESS_LEVEL dikembalikan langsung
-      tanpa pencarian.
+      PNG asli). Jika None, DEFAULT_COMPRESS_LEVEL dikembalikan
+      langsung tanpa pencarian.
 
   Returns:
     Level kompresi 0-9 dengan ukuran IDAT paling mendekati target.
@@ -152,9 +153,9 @@ def pick_compress_level(image: Image.Image, target_idat_bytes) -> int:
     else:
       hi = mid
 
-  # lo = level terkecil dengan ukuran <= target. Level tepat di bawahnya
-  # (kompresi lebih longgar, ukuran lebih besar) bisa saja justru lebih
-  # dekat ke target, jadi keduanya dibandingkan.
+  # lo = level terkecil dengan ukuran <= target. Level tepat di
+  # bawahnya (kompresi lebih longgar, ukuran lebih besar) bisa saja
+  # justru lebih dekat ke target, jadi keduanya dibandingkan.
   candidates = [lo] if lo == 0 else [lo - 1, lo]
   return min(
     candidates,

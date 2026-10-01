@@ -4,9 +4,9 @@
 # Aturan penyisipan:
 #   - Disisipkan pada bit ke-0 tiap kanal warna (R, G, B) secara
 #     berurutan, dimulai dari piksel pertama hingga piksel terakhir.
-#   - Kapasitas maksimum: C = W x H x c  (c = 3 kanal warna). Karena k=1
-#     (satu bit LSB per kanal), kapasitas dalam satuan "kanal" persis
-#     sama dengan kapasitas dalam satuan bit.
+#   - Kapasitas maksimum: C = W x H x c  (c = 3 kanal warna). Karena
+#     k=1 (satu bit LSB per kanal), kapasitas dalam satuan "kanal"
+#     persis sama dengan kapasitas dalam satuan bit.
 #   - Penggantian bit LSB untuk k=1:
 #         x'_i = x_i - (x_i mod 2) + m_i
 #     yang secara bitwise setara dengan: x'_i = (x_i & ~1) | m_i
@@ -103,7 +103,8 @@ def embed_payload(
   Raises:
     ImageValidationError: jika citra bukan PNG dan/atau bukan RGB
       24-bit.
-    CapacityError: jika kapasitas citra cover tidak cukup untuk payload.
+    CapacityError: jika kapasitas citra cover tidak cukup untuk
+      payload.
   """
   validate_png_rgb24(cover_image)
 
@@ -184,7 +185,9 @@ def extract_payload(stego_image: Image.Image) -> bytes:
       "bukan hasil penyisipan yang valid)."
     )
 
-  payload_bits = (flat_channels[:payload_bits_len] & 1).astype(np.uint8)
+  payload_bits = (
+    flat_channels[:payload_bits_len] & 1
+  ).astype(np.uint8)
   payload_bytes = np.packbits(payload_bits).tobytes()
 
   return payload_bytes

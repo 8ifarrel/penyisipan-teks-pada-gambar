@@ -151,7 +151,9 @@ class TestEndToEnd:
     # menghasilkan PSNR yang jauh di atas 30 dB (kualitas "baik"),
     # merepresentasikan skenario nyata penyisipan LSB.
     rng = np.random.default_rng(1)
-    cover_array = rng.integers(0, 256, size=(32, 32, 3), dtype=np.uint8)
+    cover_array = rng.integers(
+      0, 256, size=(32, 32, 3), dtype=np.uint8
+    )
     # Simulasikan penyisipan LSB: ganti bit ke-0 tiap elemen (beda
     # maks 1).
     lsb_bits = rng.integers(

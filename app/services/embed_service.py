@@ -67,8 +67,8 @@ def handle_submit():
 
   # Info developer: rangkuman teknis tiap tahap proses (dimensi/ukuran
   # citra, ukuran payload, status tiap tahap, PSNR, kategori kualitas).
-  # Dibentuk hanya saat mode debug aktif, diisi progresif seiring proses
-  # berjalan sehingga field yang belum tercapai tetap "-".
+  # Dibentuk hanya saat mode debug aktif, diisi progresif seiring
+  # proses berjalan sehingga field yang belum tercapai tetap "-".
   dev_info = None
   if current_app.debug:
     dev_info = empty_dev_info(_DEV_INFO_KEYS)

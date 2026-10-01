@@ -8,9 +8,12 @@
 #   MAX = nilai maksimum komponen warna (255 untuk 8-bit per kanal)
 #
 # Kategori kualitas citra stego berdasarkan nilai PSNR:
-#   PSNR < 20 dB           -> "Kualitas citra stego menurun drastis"
-#   20 dB <= PSNR <= 30 dB -> "Kualitas citra stego masih bisa diterima"
-#   PSNR > 30 dB           -> "Kualitas citra stego baik"
+#   PSNR < 20 dB:
+#     "Kualitas citra stego menurun drastis"
+#   20 dB <= PSNR <= 30 dB:
+#     "Kualitas citra stego masih bisa diterima"
+#   PSNR > 30 dB:
+#     "Kualitas citra stego baik"
 #
 # MSE dihitung langsung atas seluruh elemen array RGB (m x n x 3
 # elemen) lewat np.mean(), hasilnya identik dengan menghitung MSE tiap
@@ -67,9 +70,9 @@ def calculate_psnr(mse: float) -> float:
   Rumus: PSNR = 10 * log10(MAX^2 / MSE), dengan MAX = 255.
 
   Kasus khusus MSE = 0 (citra cover dan citra stego identik piksel demi
-  piksel) ditangani secara eksplisit agar tidak terjadi pembagian dengan
-  nol: PSNR dianggap tak terhingga (float("inf")), merepresentasikan
-  kualitas "identik sempurna".
+  piksel) ditangani secara eksplisit agar tidak terjadi pembagian
+  dengan nol: PSNR dianggap tak terhingga (float("inf")),
+  merepresentasikan kualitas "identik sempurna".
 
   Args:
     mse: nilai Mean Square Error (harus >= 0).
@@ -95,9 +98,12 @@ def categorize_quality(psnr: float) -> str:
   Menentukan kategori kualitas citra stego berdasarkan nilai PSNR.
 
   Kategori:
-    PSNR < 20 dB           -> "Kualitas citra stego menurun drastis"
-    20 dB <= PSNR <= 30 dB -> "Kualitas citra stego masih bisa diterima"
-    PSNR > 30 dB           -> "Kualitas citra stego baik"
+    PSNR < 20 dB:
+      "Kualitas citra stego menurun drastis"
+    20 dB <= PSNR <= 30 dB:
+      "Kualitas citra stego masih bisa diterima"
+    PSNR > 30 dB:
+      "Kualitas citra stego baik"
 
   Args:
     psnr: nilai PSNR dalam dB (bisa float("inf") untuk citra identik).
