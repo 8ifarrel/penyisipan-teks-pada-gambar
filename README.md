@@ -42,11 +42,3 @@ dibutuhkan untuk mengekstraksi teks dari citra tersebut.
 Dua kombinasi tidak menghasilkan citra stego karena kapasitas citra
 tidak cukup: `pintu_128x` dan `kucing_128x` dengan teks 8 KB.
 Karena itu, tiap objek memiliki 15 citra stego (bukan 16).
-
-## Cara menghasilkan ulang
-
-Jalankan `run_pengujian.py` dari branch `main`. Skrip itu memproses
-seluruh kombinasi lewat alur website (penyisipan, unduh, lalu
-ekstraksi). Kunci AES dibangkitkan acak pada setiap penyisipan,
-sehingga menjalankan ulang akan menghasilkan nama file dan citra
-stego yang berbeda dari yang ada di branch ini.
