@@ -1,4 +1,5 @@
-# Format angka & ukuran untuk tampilan (Info Developer, halaman hasil).
+# Format angka & ukuran untuk tampilan (halaman hasil, script
+# pengujian).
 #
 # Konvensi Indonesia dipakai di seluruh modul ini: titik (.) sebagai
 # pemisah ribuan, koma (,) sebagai pemisah desimal, kebalikan dari

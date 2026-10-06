@@ -29,11 +29,11 @@
   3. Utilitas kecil
   4. Layout (container, page)
   5. Header & navigasi (termasuk hamburger menu mobile)
-  6. Tipografi halaman (page-header, hero, ilustrasi hero)
+  6. Tipografi halaman (page-header, hero)
   7. Card / panel (garis tepi tipis)
-  8. Form (field, input, textarea, dropzone unggah, input berikon)
+  8. Form (field, input, textarea, input berikon)
   9. Tombol (sudut tegas)
-  10. Hasil (preview citra, badge kualitas, info developer)
+  10. Hasil (preview citra, badge kualitas)
   11. Flash messages
   12. Footer
   13. Breakpoint tablet (min-width: 640px)
@@ -46,7 +46,7 @@
   /* Warna: latar hampir-hitam + 1 teks putih kebiruan + 1 aksen
    PUTIH */
   --color-bg: #0b0f14;
-  --color-surface: #0f1420;          /* input, dropzone, image-frame */
+  --color-surface: #0f1420;          /* input, image-frame */
   --color-surface-tint: #131a24;     /* kartu/panel */
   --color-border: #232c38;
   --color-border-strong: #38445a;
@@ -318,7 +318,7 @@ h3 {
   background: var(--color-accent-soft);
 }
 
-/* 6. Tipografi halaman (page-header, hero & ilustrasi) ------------ */
+/* 6. Tipografi halaman (page-header, hero) ------------ */
 
 .page-header,
 .hero,
@@ -347,18 +347,6 @@ h3 {
 .hero {
   text-align: center;
   padding-block: var(--space-6) var(--space-7);
-}
-
-.hero-illustration-wrap {
-  display: flex;
-  justify-content: center;
-  margin-bottom: var(--space-4);
-  color: var(--color-accent);
-}
-
-.hero-illustration {
-  width: 5.5rem;
-  height: 5.5rem;
 }
 
 .hero h1 {
@@ -506,78 +494,58 @@ textarea.key-display {
   height: 1.1rem;
 }
 
-/* Area unggah drag-and-drop. Input file ASLI tetap ada dan menutupi
- seluruh area (opacity: 0) sehingga klik & drag-and-drop bawaan
- browser tetap berfungsi penuh secara native. Lapisan visual di
- atasnya (.dropzone__content) murni dekoratif (pointer-events: none)
- supaya klik menembus ke input. */
-.dropzone {
+/* Input file dengan teks berbahasa Indonesia. Input ASLI tetap ada
+ (disembunyikan secara visual, tetap bisa difokus keyboard); label
+ berperan sebagai tombol yang menyatu di tepi kiri kotak, nama file
+ diisi oleh main.js. */
+.file-field {
   position: relative;
-  padding: var(--space-6) var(--space-4);
-  border: 2px dashed var(--color-border-strong);
-  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  min-height: var(--touch-target);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   background: var(--color-surface);
-  text-align: center;
-  transition: border-color var(--transition-fast),
-    background-color var(--transition-fast);
 }
 
-.dropzone__input {
+.file-field__input {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
   opacity: 0;
-  cursor: pointer;
-}
-
-.dropzone__content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
   pointer-events: none;
 }
 
-.dropzone__icon {
-  color: var(--color-text-muted);
-}
-
-.dropzone__icon .icon {
-  width: 2rem;
-  height: 2rem;
-}
-
-.dropzone__title {
+/* Selector diawali .form-field supaya menimpa gaya umum
+ ".form-field label" (monospace, tebal, display block). */
+.form-field .file-field__button {
+  display: flex;
+  align-items: center;
+  flex: none;
   margin: 0;
-  font-weight: 500;
-}
-
-.dropzone__filename {
-  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-right: 1px solid var(--color-border-strong);
+  background: var(--color-bg);
+  font-family: var(--font-sans);
   font-size: var(--fs-sm);
-  font-weight: 600;
-  color: var(--color-accent);
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.file-field__name {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--fs-sm);
   word-break: break-all;
 }
 
-.dropzone.is-dragover,
-.dropzone.is-focused {
-  border-color: var(--color-accent);
-  background: var(--color-accent-soft);
-}
-
-.dropzone.has-file {
-  border-style: solid;
-  border-color: var(--color-accent);
-}
-
-.dropzone.has-file .dropzone__icon {
-  color: var(--color-accent);
+.file-field__input:focus-visible ~ .file-field__button {
+  box-shadow: inset 0 0 0 2px var(--color-accent);
 }
 
 /* 9. Tombol (sudut tegas, huruf kapital ala perintah CLI) --------- */
@@ -675,9 +643,15 @@ textarea.key-display {
   border-radius: var(--radius-md);
 }
 
+/* Ukuran tampilan dibuat seragam (maks. 16rem = 256px) berapa pun
+ resolusi aslinya: citra kecil (mis. 128 px) diperbesar, citra besar
+ (mis. 512 px) diperkecil. Rasio asli tetap terjaga lewat
+ object-fit. */
 .result-image {
-  max-width: 100%;
+  width: min(100%, 16rem);
   height: auto;
+  max-height: 16rem;
+  object-fit: contain;
   border-radius: calc(var(--radius-md) - 4px);
 }
 
@@ -717,84 +691,6 @@ textarea.key-display {
 .quality-badge--bad {
   background: var(--color-badge-bad-bg);
   color: var(--color-badge-bad-text);
-}
-
-/* Info developer: rangkuman teknis tiap proses (dimensi/ukuran citra,
- ukuran payload, status tiap tahap) untuk keperluan
- dokumentasi/pengujian, disembunyikan default lewat <details> supaya
- tidak mengganggu pengguna awam yang cuma butuh hasil akhirnya. */
-.dev-info summary {
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-text-muted);
-}
-
-.dev-info summary::before {
-  content: "> ";
-  color: var(--color-accent);
-}
-
-.dev-info[open] summary {
-  margin-bottom: var(--space-4);
-  color: var(--color-text);
-}
-
-.dev-info__list {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--space-2) var(--space-4);
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: var(--fs-sm);
-}
-
-.dev-info__list dt {
-  color: var(--color-text-muted);
-}
-
-.dev-info__list dd {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.2em;
-  margin: 0;
-  text-align: right;
-  color: var(--color-text);
-  word-break: break-word;
-}
-
-.dev-info__copy {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  vertical-align: -0.2em;
-}
-
-.dev-info__copy .icon {
-  width: 0.85em;
-  height: 0.85em;
-}
-
-.dev-info__copy:hover {
-  color: var(--color-accent);
-}
-
-.dev-info__copy--success {
-  color: var(--color-success-text);
-}
-
-.dev-info__copy--error {
-  color: var(--color-error-text);
 }
 
 /* 11. Flash messages ---------------------------------------------- */
@@ -900,22 +796,12 @@ textarea.key-display {
   .page {
     padding-block: var(--space-7) var(--space-8);
   }
-
-  .hero-illustration {
-    width: 6.5rem;
-    height: 6.5rem;
-  }
 }
 
-/* Layar sangat sempit: rapatkan sedikit spacing vertikal & ukuran
- dropzone */
+/* Layar sangat sempit: rapatkan sedikit spacing vertikal */
 @media (max-width: 374px) {
   .page {
     padding-block: var(--space-5) var(--space-6);
-  }
-
-  .dropzone {
-    padding: var(--space-5) var(--space-3);
   }
 }
 
@@ -930,10 +816,6 @@ textarea.key-display {
 
   .hero {
     padding-block: 0;
-  }
-
-  .hero-illustration-wrap {
-    display: none;
   }
 
   .hero h1 {

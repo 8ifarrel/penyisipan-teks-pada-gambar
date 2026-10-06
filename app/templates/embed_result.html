@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% from "_icons.html" import icon_download, icon_copy %}
-{% from "_dev_info.html" import embed_dev_info %}
 {% block title %}Hasil Penyisipan{% endblock %}
 
 {% block content %}
@@ -57,8 +56,4 @@
       </button>
     </div>
   </div>
-
-  {% if developer_mode %}
-    {{ embed_dev_info(dev_info) }}
-  {% endif %}
 {% endblock %}

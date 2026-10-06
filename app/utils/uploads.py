@@ -3,7 +3,6 @@
 # routes.py bisa fokus pada alur request -> response saja.
 
 import io
-import os
 
 from PIL import Image, UnidentifiedImageError
 
@@ -36,18 +35,3 @@ def open_uploaded_image(file_storage):
     return image
   except (UnidentifiedImageError, OSError):
     return None
-
-
-def file_size_bytes(file_storage) -> int:
-  """
-  Menghitung ukuran berkas upload dalam byte tanpa mengganggu posisi
-  stream-nya, supaya Image.open() sesudah ini tetap membaca dari awal.
-  """
-  if file_storage is None:
-    return 0
-  stream = file_storage.stream
-  pos = stream.tell()
-  stream.seek(0, os.SEEK_END)
-  size = stream.tell()
-  stream.seek(pos)
-  return size

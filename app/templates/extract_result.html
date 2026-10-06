@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% from "_icons.html" import icon_copy %}
-{% from "_dev_info.html" import extract_dev_info %}
 {% block title %}Hasil Ekstraksi{% endblock %}
 
 {% block content %}
@@ -27,8 +26,4 @@
       <span class="btn__label">Salin Teks</span>
     </button>
   </div>
-
-  {% if developer_mode %}
-    {{ extract_dev_info(dev_info) }}
-  {% endif %}
 {% endblock %}

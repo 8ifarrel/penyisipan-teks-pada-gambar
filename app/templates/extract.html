@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-{% from "_icons.html" import icon_upload, icon_key %}
-{% from "_dev_info.html" import extract_dev_info %}
+{% from "_icons.html" import icon_key %}
 {% block title %}Ekstraksi Teks{% endblock %}
 
 {% block content %}
@@ -16,15 +15,14 @@
         Foto harus berformat PNG dan bermodel warna RGB 24-bit
       </p>
 
-      <div class="dropzone">
+      <div class="file-field">
         <input type="file" id="stego_image" name="stego_image"
-           accept="image/png" class="dropzone__input" required>
-        <div class="dropzone__content">
-          <span class="dropzone__icon">{{ icon_upload() }}</span>
-          <p class="dropzone__title">Klik atau seret foto ke sini</p>
-          <p class="dropzone__filename" data-dropzone-filename
-            hidden></p>
-        </div>
+          class="file-field__input" accept="image/png" required>
+        <label for="stego_image"
+          class="file-field__button">Pilih Foto</label>
+        <span class="file-field__name" data-file-name>
+          Tidak ada file dipilih
+        </span>
       </div>
     </div>
 
@@ -44,8 +42,4 @@
 
     <button type="submit" class="btn btn-block">Ekstraksi Teks</button>
   </form>
-
-  {% if developer_mode %}
-    {{ extract_dev_info(dev_info) }}
-  {% endif %}
 {% endblock %}

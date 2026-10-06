@@ -29,11 +29,4 @@ def create_app():
   from app.routes import main_bp
   app.register_blueprint(main_bp)
 
-  # Menyediakan variabel developer_mode ke seluruh template, mengikuti
-  # status debug Flask (app.debug). Dipakai untuk
-  # menampilkan/menyembunyikan panel "Info Developer" di halaman hasil.
-  @app.context_processor
-  def inject_developer_mode():
-    return {"developer_mode": app.debug}
-
   return app
