@@ -1,5 +1,15 @@
 # Penyisipan Teks pada Gambar
 
+> **Catatan arsip**: branch ini (`archive/dev-info-feature`) adalah arsip,
+> bukan versi terbaru aplikasi.
+>
+> Branch ini menyimpan versi yang memiliki fitur Info Developer
+> (dimensi dan ukuran citra, ukuran payload, serta status tiap tahap
+> proses) pada halaman sisip, ekstraksi, dan hasil. Fitur ini dihapus
+> karena di luar cakupan skripsi.
+>
+> Versi terbaru ada di branch `main`.
+
 Aplikasi web steganografi yang menyisipkan teks rahasia ke dalam citra
 digital. Teks dienkripsi terlebih dahulu dengan **AES-128-GCM**, lalu
 payload hasil enkripsinya disisipkan ke citra menggunakan metode
