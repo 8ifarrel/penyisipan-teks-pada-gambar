@@ -12,7 +12,7 @@ Kode aplikasi ada di branch `main`.
 
 | Folder | Isi |
 |---|---|
-| `1_mentah/` | Bahan asli sebelum diolah: foto `kucing_ori.jpg` dan `pintu_ori.jpg`, serta teks `teks-2000B_ori.txt` sampai `teks-8000B_ori.txt`. |
+| `1_mentah/` | Bahan asli sebelum diolah: foto `kucing_ori.jpg` dan `pintu_ori.jpg`, serta teks sumber `teks_8KB_ori.txt` (8 KB). |
 | `2_siap_uji/` | Bahan yang langsung dipakai untuk pengujian: citra cover PNG RGB 24-bit (`img/kucing/`, `img/pintu/`) dan teks uji (`txt/`). |
 | `3_hasil/` | Citra stego hasil penyisipan, dikelompokkan per objek (`kucing/`, `pintu/`). |
 
