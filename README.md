@@ -1,5 +1,14 @@
 # Samarupa
 
+> **Catatan arsip**: branch ini (`archive/pillow-based-png-io`) adalah arsip,
+> bukan versi terbaru aplikasi.
+>
+> Branch ini menyimpan versi yang membaca dan menulis PNG lewat
+> Pillow, tanpa penyesuaian metadata dan urutan chunk, tetapi tetap
+> mempertahankan penyesuaian level kompresi PNG.
+>
+> Versi terbaru ada di branch `main`.
+
 Aplikasi web steganografi yang menyisipkan teks rahasia ke dalam citra digital. Teks dienkripsi terlebih dahulu dengan **AES-128-GCM**, lalu payload hasil enkripsinya disisipkan ke citra menggunakan metode **Least Significant Bit (LSB)**.
 
 Nama "Samarupa" berasal dari kata "samar" (tersembunyi) dan "rupa" (wujud/citra): wujud yang menyamarkan pesan di dalamnya.
