@@ -1,5 +1,13 @@
 # Penyisipan Teks pada Gambar
 
+> **Catatan arsip**: branch ini (`archive/pengujian-scripts`) adalah arsip,
+> bukan versi terbaru aplikasi.
+>
+> Branch ini menyimpan berkas pendukung pengujian yang sudah dihapus
+> dari `main`.
+>
+> Versi terbaru ada di branch `main`.
+
 Aplikasi web steganografi yang menyisipkan teks rahasia ke dalam citra
 digital. Teks dienkripsi terlebih dahulu dengan **AES-128-GCM**, lalu
 payload hasil enkripsinya disisipkan ke citra menggunakan metode
