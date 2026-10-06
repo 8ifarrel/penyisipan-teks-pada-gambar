@@ -1,6 +1,14 @@
 # Samarupa
 
-> **Catatan arsip**: branch ini (`archive/adaptive-png-fidelity`) menyimpan versi Samarupa yang citra stego-nya disesuaikan penuh dengan karakteristik encoder citra cover asli (metadata, urutan chunk, dan level kompresi PNG-nya). Fitur ini kemudian dipangkas di `main`, hanya bagian penyesuaian level kompresi yang dipertahankan; branch ini disimpan sebagai referensi/cadangan atas versi lengkapnya.
+> **Catatan arsip**: branch ini (`archive/adaptive-png-fidelity`) adalah arsip,
+> bukan versi terbaru aplikasi.
+>
+> Branch ini menyimpan versi yang menyesuaikan citra stego secara penuh
+> dengan karakteristik encoder citra cover asli (metadata, urutan
+> chunk, dan level kompresi PNG). Fitur ini kemudian dipangkas dan
+> hanya penyesuaian level kompresi yang dipertahankan.
+>
+> Versi terbaru ada di branch `main`.
 
 Aplikasi web steganografi yang menyisipkan teks rahasia ke dalam citra digital. Teks dienkripsi terlebih dahulu dengan **AES-128-GCM**, lalu payload hasil enkripsinya disisipkan ke citra menggunakan metode **Least Significant Bit (LSB)**.
 
