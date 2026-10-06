@@ -29,6 +29,10 @@ Kode aplikasi ada di branch `main`.
 
 ## Hasil
 
+Rekap lengkap seluruh pengujian (32 baris) dicatat pada spreadsheet
+berikut:
+[Pencatatan Hasil Pengujian Skripsi](https://docs.google.com/spreadsheets/d/1jAHLK298xYfTonicSSep1OiYDAIqJD8YHR2758-3PZU).
+
 Nama file citra stego di `3_hasil/` berformat:
 
 ```
