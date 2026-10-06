@@ -11,6 +11,9 @@ Menerapkan Penyisipan Teks pada Gambar" oleh Muhammad Farrel Sirah
 (NIM 2209106138) dari Program Studi S-1 Informatika Universitas
 Mulawarman.
 
+Data pengujian tersedia di branch
+[`data/pengujian`](https://github.com/8ifarrel/penyisipan-teks-pada-gambar/tree/data/pengujian).
+
 ## Fitur
 
 - **Sisipkan Teks**: unggah citra PNG (RGB 24-bit) + tulis teks, sistem
